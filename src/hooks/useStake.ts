@@ -1,22 +1,22 @@
 import {useCallback} from 'react';
-import useBombFinance from './useBombFinance';
-import {Bank} from '../bomb-finance';
+import useEmpFinance from './useEmpFinance';
+import {Bank} from '../emp-finance';
 import useHandleTransactionReceipt from './useHandleTransactionReceipt';
 import {parseUnits} from 'ethers/lib/utils';
 
 const useStake = (bank: Bank) => {
-  const bombFinance = useBombFinance();
+  const empFinance = useEmpFinance();
   const handleTransactionReceipt = useHandleTransactionReceipt();
 
   const handleStake = useCallback(
     (amount: string) => {
       const amountBn = parseUnits(amount, bank.depositToken.decimal);
       handleTransactionReceipt(
-        bombFinance.stake(bank.contract, bank.poolId, amountBn),
+        empFinance.stake(bank.contract, bank.poolId, amountBn),
         `Stake ${amount} ${bank.depositTokenName} to ${bank.contract}`,
       );
     },
-    [bank, bombFinance, handleTransactionReceipt],
+    [bank, empFinance, handleTransactionReceipt],
   );
   return {onStake: handleStake};
 };

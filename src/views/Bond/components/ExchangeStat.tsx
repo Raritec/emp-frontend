@@ -13,7 +13,7 @@ const ExchangeStat: React.FC<ExchangeStatProps> = ({tokenName, description, pric
   return (
     <Card>
       <StyledCardContentInner>
-        <StyledCardTitle>{`💰 ${tokenName} = ${price} BTC`}</StyledCardTitle>
+        <StyledCardTitle>{`💰 ${tokenName} = ${price} ETH`}</StyledCardTitle>
         <StyledDesc>{description}</StyledDesc>
       </StyledCardContentInner>
     </Card>

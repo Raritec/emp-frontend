@@ -73,7 +73,7 @@ const Boardroom = () => {
               <Grid item xs={12} md={2} lg={2} className={classes.gridItem}>
                 <Card className={classes.gridItem}>
                   <CardContent style={{textAlign: 'center'}}>
-                    <Typography style={{textTransform: 'uppercase', color: '#f9d749'}}>Next Epoch</Typography>
+                    <Typography style={{textTransform: 'uppercase', color: '#155aca'}}>Next Epoch</Typography>
                     <ProgressCountdown base={moment().toDate()} hideBar={true} deadline={to} description="Next Epoch" />
                   </CardContent>
                 </Card>
@@ -81,7 +81,7 @@ const Boardroom = () => {
               <Grid item xs={12} md={2} lg={2} className={classes.gridItem}>
                 <Card className={classes.gridItem}>
                   <CardContent align="center">
-                    <Typography style={{textTransform: 'uppercase', color: '#f9d749'}}>Current Epoch</Typography>
+                    <Typography style={{textTransform: 'uppercase', color: '#155aca'}}>Current Epoch</Typography>
                     <Typography>{Number(currentEpoch)}</Typography>
                   </CardContent>
                 </Card>
@@ -89,12 +89,12 @@ const Boardroom = () => {
               <Grid item xs={12} md={2} lg={2} className={classes.gridItem}>
                 <Card className={classes.gridItem}>
                   <CardContent align="center">
-                    <Typography style={{textTransform: 'uppercase', color: '#f9d749'}}>
-                      BOMB PEG <small>(TWAP)</small>
+                    <Typography style={{textTransform: 'uppercase', color: '#155aca'}}>
+                      EMP PEG <small>(TWAP)</small>
                     </Typography>
-                    <Typography>{scalingFactor} BTC</Typography>
+                    <Typography>{scalingFactor} ETH</Typography>
                     <Typography>
-                      <small>per 10,000 BOMB</small>
+                      <small>per 4,000 EMP</small>
                     </Typography>
                   </CardContent>
                 </Card>
@@ -102,7 +102,7 @@ const Boardroom = () => {
               <Grid item xs={12} md={2} lg={2} className={classes.gridItem}>
                 <Card className={classes.gridItem}>
                   <CardContent align="center">
-                    <Typography style={{textTransform: 'uppercase', color: '#f9d749'}}>APR</Typography>
+                    <Typography style={{textTransform: 'uppercase', color: '#155aca'}}>APR</Typography>
                     <Typography>{boardroomAPR.toFixed(2)}%</Typography>
                   </CardContent>
                 </Card>
@@ -110,7 +110,7 @@ const Boardroom = () => {
               <Grid item xs={12} md={2} lg={2}>
                 <Card className={classes.gridItem}>
                   <CardContent align="center">
-                    <Typography style={{textTransform: 'uppercase', color: '#f9d749'}}>BSHARES Staked</Typography>
+                    <Typography style={{textTransform: 'uppercase', color: '#155aca'}}>ESHARES Staked</Typography>
                     <Typography>{getDisplayBalance(totalStaked)}</Typography>
                   </CardContent>
                 </Card>
@@ -121,8 +121,8 @@ const Boardroom = () => {
               <Box mt={3} style={{ width: '600px' }}>
                 <Alert variant="filled" severity="warning">
                   <b> Boardroom smart contract has been updated! </b><br />
-                  If you have BSHARE in the previous Boardroom, visit here to retrieve it:<br />
-                  <a href="https://61aadb35c5a5c50007c2a61b--bomb-money.netlify.app/boardroom">https://61aadb35c5a5c50007c2a61b--bomb-money.netlify.app/boardroom</a><br /><br />
+                  If you have ESHARE in the previous Boardroom, visit here to retrieve it:<br />
+                  <a href="https://61aadb35c5a5c50007c2a61b--emp-money.netlify.app/boardroom">https://61aadb35c5a5c50007c2a61b--emp-money.netlify.app/boardroom</a><br /><br />
                 </Alert>
 
               </Box>

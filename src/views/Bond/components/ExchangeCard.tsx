@@ -6,14 +6,14 @@ import {Button, Card} from '@material-ui/core';
 // import Button from '../../../components/Button';
 // import Card from '../../../components/Card';
 import CardContent from '../../../components/CardContent';
-import useBombFinance from '../../../hooks/useBombFinance';
+import useEmpFinance from '../../../hooks/useEmpFinance';
 import Label from '../../../components/Label';
 import TokenSymbol from '../../../components/TokenSymbol';
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
 import {faArrowRight} from '@fortawesome/free-solid-svg-icons';
 import useModal from '../../../hooks/useModal';
 import ExchangeModal from './ExchangeModal';
-import ERC20 from '../../../bomb-finance/ERC20';
+import ERC20 from '../../../emp-finance/ERC20';
 import useTokenBalance from '../../../hooks/useTokenBalance';
 import useApprove, {ApprovalState} from '../../../hooks/useApprove';
 import useCatchError from '../../../hooks/useCatchError';
@@ -44,7 +44,7 @@ const ExchangeCard: React.FC<ExchangeCardProps> = ({
   const catchError = useCatchError();
   const {
     contracts: {Treasury},
-  } = useBombFinance();
+  } = useEmpFinance();
   const [approveStatus, approve] = useApprove(fromToken, Treasury.address);
 
   const balance = useTokenBalance(fromToken);
@@ -116,7 +116,7 @@ const StyledCardTitle = styled.div`
   font-weight: 700;
   height: 64px;
   justify-content: center;
-  color: #f9d749;
+  color: #155aca;
   margin-top: ${(props) => -props.theme.spacing[3]}px;
 `;
 

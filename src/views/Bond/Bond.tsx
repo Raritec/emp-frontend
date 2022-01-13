@@ -9,15 +9,15 @@ import ExchangeCard from './components/ExchangeCard';
 import styled from 'styled-components';
 import Spacer from '../../components/Spacer';
 import useBondStats from '../../hooks/useBondStats';
-import useBombStats from '../../hooks/useBombStats';
-import useBombFinance from '../../hooks/useBombFinance';
+import useEmpStats from '../../hooks/useEmpStats';
+import useEmpFinance from '../../hooks/useEmpFinance';
 import useCashPriceInLastTWAP from '../../hooks/useCashPriceInLastTWAP';
 import {useTransactionAdder} from '../../state/transactions/hooks';
 import ExchangeStat from './components/ExchangeStat';
 import useTokenBalance from '../../hooks/useTokenBalance';
 import useBondsPurchasable from '../../hooks/useBondsPurchasable';
 import {getDisplayBalance} from '../../utils/formatBalance';
-import {BOND_REDEEM_PRICE, BOND_REDEEM_PRICE_BN} from '../../bomb-finance/constants';
+import {BOND_REDEEM_PRICE, BOND_REDEEM_PRICE_BN} from '../../emp-finance/constants';
 
 import HomeImage from '../../assets/img/background.jpg';
 const BackgroundImage = createGlobalStyle`
@@ -31,33 +31,33 @@ const BackgroundImage = createGlobalStyle`
 const Bond: React.FC = () => {
   const {path} = useRouteMatch();
   const {account} = useWallet();
-  const bombFinance = useBombFinance();
+  const empFinance = useEmpFinance();
   const addTransaction = useTransactionAdder();
   const bondStat = useBondStats();
-  const bombStat = useBombStats();
+  const empStat = useEmpStats();
   const cashPrice = useCashPriceInLastTWAP();
 
   const bondsPurchasable = useBondsPurchasable();
 
-  const bondBalance = useTokenBalance(bombFinance?.BBOND);
+  const bondBalance = useTokenBalance(empFinance?.EBOND);
   // const scalingFactor = useMemo(() => (cashPrice ? Number(cashPrice).toFixed(4) : null), [cashPrice]);
 
   const handleBuyBonds = useCallback(
     async (amount: string) => {
-      const tx = await bombFinance.buyBonds(amount);
+      const tx = await empFinance.buyBonds(amount);
       addTransaction(tx, {
-        summary: `Buy ${Number(amount).toFixed(2)} BBOND with ${amount} BOMB`,
+        summary: `Buy ${Number(amount).toFixed(2)} EBOND with ${amount} EMP`,
       });
     },
-    [bombFinance, addTransaction],
+    [empFinance, addTransaction],
   );
 
   const handleRedeemBonds = useCallback(
     async (amount: string) => {
-      const tx = await bombFinance.redeemBonds(amount);
-      addTransaction(tx, {summary: `Redeem ${amount} BBOND`});
+      const tx = await empFinance.redeemBonds(amount);
+      addTransaction(tx, {summary: `Redeem ${amount} EBOND`});
     },
-    [bombFinance, addTransaction],
+    [empFinance, addTransaction],
   );
   const isBondRedeemable = useMemo(() => cashPrice.gt(BOND_REDEEM_PRICE_BN), [cashPrice]);
   const isBondPurchasable = useMemo(() => Number(bondStat?.tokenInFtm) < 1.01, [bondStat]);
@@ -75,14 +75,14 @@ const Bond: React.FC = () => {
               <StyledCardWrapper>
                 <ExchangeCard
                   action="Purchase"
-                  fromToken={bombFinance.BOMB}
-                  fromTokenName="BOMB"
-                  toToken={bombFinance.BBOND}
-                  toTokenName="BBOND"
+                  fromToken={empFinance.EMP}
+                  fromTokenName="EMP"
+                  toToken={empFinance.EBOND}
+                  toTokenName="EBOND"
                   priceDesc={
                     !isBondPurchasable
-                      ? 'BOMB is over peg'
-                      : getDisplayBalance(bondsPurchasable, 18, 4) + ' BBOND available for purchase'
+                      ? 'EMP is over peg'
+                      : getDisplayBalance(bondsPurchasable, 18, 4) + ' EBOND available for purchase'
                   }
                   onExchange={handleBuyBonds}
                   disabled={!bondStat || isBondRedeemable}
@@ -90,28 +90,28 @@ const Bond: React.FC = () => {
               </StyledCardWrapper>
               <StyledStatsWrapper>
                 <ExchangeStat
-                  tokenName="10,000 BOMB"
+                  tokenName="4,000 EMP"
                   description="Last-Hour TWAP Price"
-                  price={Number(bombStat?.tokenInFtm).toFixed(4) || '-'}
+                  price={Number(empStat?.tokenInFtm).toFixed(4) || '-'}
                 />
                 <Spacer size="md" />
                 <ExchangeStat
-                  tokenName="10,000 BBOND"
-                  description="Current Price: (BOMB)^2"
+                  tokenName="4,000 EBOND"
+                  description="Current Price: (EMP)^2"
                   price={Number(bondStat?.tokenInFtm).toFixed(4) || '-'}
                 />
               </StyledStatsWrapper>
               <StyledCardWrapper>
                 <ExchangeCard
                   action="Redeem"
-                  fromToken={bombFinance.BBOND}
-                  fromTokenName="BBOND"
-                  toToken={bombFinance.BOMB}
-                  toTokenName="BOMB"
-                  priceDesc={`${getDisplayBalance(bondBalance)} BBOND Available in wallet`}
+                  fromToken={empFinance.EBOND}
+                  fromTokenName="EBOND"
+                  toToken={empFinance.EMP}
+                  toTokenName="EMP"
+                  priceDesc={`${getDisplayBalance(bondBalance)} EBOND Available in wallet`}
                   onExchange={handleRedeemBonds}
                   disabled={!bondStat || bondBalance.eq(0) || !isBondRedeemable}
-                  disabledDescription={!isBondRedeemable ? `Enabled when 10,000 BOMB > ${BOND_REDEEM_PRICE}BTC` : null}
+                  disabledDescription={!isBondRedeemable ? `Enabled when 4,000 EMP > ${BOND_REDEEM_PRICE}ETH` : null}
                 />
               </StyledCardWrapper>
             </StyledBond>

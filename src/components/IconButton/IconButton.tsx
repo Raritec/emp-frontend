@@ -35,7 +35,7 @@ const StyledButton = styled.button<StyledButtonProps>`
   border-radius: 28px;
   background-color: #171923;
   box-shadow: ${(props) => ('0px 0px 5px 0px ' + !props.disabled ? 'rgba(251,221,76,1)' : 'grey' + ';')};
-  color: ${(props) => (!props.disabled ? '#f9d749' : 'grey')};
+  color: ${(props) => (!props.disabled ? '#155aca' : 'grey')};
   cursor: pointer;
   display: flex;
   font-weight: 700;
@@ -50,7 +50,7 @@ const StyledButton = styled.button<StyledButtonProps>`
   width: 56px;
 
   &:hover {
-    background-color: #f9d749;
+    background-color: #155aca;
     color: #171923;
   }
 `;

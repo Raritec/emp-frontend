@@ -24,7 +24,7 @@ body {
 /* .MuiTypography-body1,
 .MuiPaper-root, */
 h2 {
-  color: #f9d749 !important;
+  color: #155aca !important;
 }
 
 body {
@@ -47,11 +47,11 @@ h5,
 h6 {
   font-family: 'Rubik', cursive !important;
   text-transform: uppercase;
-  color: #f9d749;
+  color: #155aca;
 }
 
 .MuiToolbar-regular {
-  color: #e0e3bd;
+  color: #d6efff;
 }
 
 .MuiButton-containedPrimary,
@@ -74,7 +74,7 @@ code {
   text-transform: none !important;
 }
 .wallet-button:hover {
-  color: #f9d749 !important;
+  color: #155aca !important;
 }
 
 .navLink {
@@ -82,7 +82,7 @@ code {
 }
 
 .navLink:hover {
-  color: #f9d749 !important;
+  color: #155aca !important;
 }
 
 .shinyButton {
@@ -93,8 +93,8 @@ code {
   border-radius: 15px;
   font-size: 1rem !important;
   padding-left: 5px;
-  color: #f9d749 !important;
-  box-shadow: 0px 0px 5px 0px rgba(251, 221, 76, 1);
+  color: #155aca !important;
+  box-shadow: 0px 0px 5px 0px rgba(26, 107, 158, 1);
 }
 
 .shinyButtonDisabled {
@@ -105,7 +105,7 @@ code {
 }
 
 .shinyButton:hover {
-  background-color: #f9d749 !important;
+  background-color: #155aca !important;
   color: #171923 !important;
 }
 
@@ -116,9 +116,9 @@ code {
   border-radius: 15px;
   font-size: 1rem !important;
   padding-left: 5px;
-  background-color: #f9d749 !important;
+  background-color: #155aca !important;
   color: #171923 !important;
-  /* box-shadow: 0px 0px 5px 0px rgba(251,221,76,1); */
+  /* box-shadow: 0px 0px 5px 0px rgba(26, 107, 158, 1); */
 }
 
 .shinyButtonDisabledSecondary {
@@ -129,9 +129,9 @@ code {
 }
 
 .shinyButtonSecondary:hover {
-  background-color: #f9d749 !important;
+  background-color: #155aca !important;
   color: #171923 !important;
-  box-shadow: 0px 0px 5px 0px rgba(251, 221, 76, 1);
+  box-shadow: 0px 0px 5px 0px rgba(26, 107, 158, 1);
 }
 
 .navTokenPrice {
@@ -150,14 +150,14 @@ code {
   overflow: hidden;
 }
 
-.bomb {
-  background-image: url('/bomb1.png');
+.emp {
+  background-image: url('/emp-final.gif');
 }
 
 .bshare {
-  background-image: url('/bomb2.png');
+  background-image: url('/eshares-final.png');
 }
 
 .btc {
-  background-image: url('/bomb3.png');
+  background-image: url('/eth-final.png');
 }

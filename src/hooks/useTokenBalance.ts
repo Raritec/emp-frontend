@@ -1,17 +1,17 @@
 import {useCallback, useEffect, useState} from 'react';
 import {BigNumber} from 'ethers';
-import ERC20 from '../bomb-finance/ERC20';
-import useBombFinance from './useBombFinance';
+import ERC20 from '../emp-finance/ERC20';
+import useEmpFinance from './useEmpFinance';
 import config from '../config';
 
 const useTokenBalance = (token: ERC20) => {
   const [balance, setBalance] = useState(BigNumber.from(0));
-  const bombFinance = useBombFinance();
-  const isUnlocked = bombFinance?.isUnlocked;
+  const empFinance = useEmpFinance();
+  const isUnlocked = empFinance?.isUnlocked;
 
   const fetchBalance = useCallback(async () => {
-    setBalance(await token.balanceOf(bombFinance.myAccount));
-  }, [token, bombFinance.myAccount]);
+    setBalance(await token.balanceOf(empFinance.myAccount));
+  }, [token, empFinance.myAccount]);
 
   useEffect(() => {
     if (isUnlocked) {
@@ -19,7 +19,7 @@ const useTokenBalance = (token: ERC20) => {
       let refreshInterval = setInterval(fetchBalance, config.refreshInterval);
       return () => clearInterval(refreshInterval);
     }
-  }, [isUnlocked, token, fetchBalance, bombFinance]);
+  }, [isUnlocked, token, fetchBalance, empFinance]);
 
   return balance;
 };

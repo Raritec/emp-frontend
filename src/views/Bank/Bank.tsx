@@ -15,8 +15,8 @@ import Stake from './components/Stake';
 import useBank from '../../hooks/useBank';
 import useStatsForPool from '../../hooks/useStatsForPool';
 import useRedeem from '../../hooks/useRedeem';
-import {Bank as BankEntity} from '../../bomb-finance';
-import useBombFinance from '../../hooks/useBombFinance';
+import {Bank as BankEntity} from '../../emp-finance';
+import useEmpFinance from '../../hooks/useEmpFinance';
 import {Alert} from '@material-ui/lab';
 
 const useStyles = makeStyles((theme) => ({
@@ -110,17 +110,17 @@ const Bank: React.FC = () => {
 };
 
 const LPTokenHelpText: React.FC<{bank: BankEntity}> = ({bank}) => {
-  const bombFinance = useBombFinance();
-  const bombAddr = bombFinance.BOMB.address;
-  const bshareAddr = bombFinance.BSHARE.address;
+  const empFinance = useEmpFinance();
+  const empAddr = empFinance.EMP.address;
+  const bshareAddr = empFinance.ESHARE.address;
 
   let pairName: string;
   let uniswapUrl: string;
-  if (bank.depositTokenName.includes('BOMB')) {
-    pairName = 'BOMB-BTCB pair';
-    uniswapUrl = 'https://pancakeswap.finance/add/0x7130d2A12B9BCbFAe4f2634d864A1Ee1Ce3Ead9c/' + bombAddr;
+  if (bank.depositTokenName.includes('EMP')) {
+    pairName = 'EMP-ETH pair';
+    uniswapUrl = 'https://pancakeswap.finance/add/0x7130d2A12B9BCbFAe4f2634d864A1Ee1Ce3Ead9c/' + empAddr;
   } else {
-    pairName = 'BSHARE-BNB pair';
+    pairName = 'ESHARE-BNB pair';
     uniswapUrl = 'https://pancakeswap.finance/add/BNB/' + bshareAddr;
   }
   return (

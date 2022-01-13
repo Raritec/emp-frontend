@@ -42,8 +42,8 @@ const Farm = () => {
 
               <Box mt={5}>
                 <div hidden={activeBanks.filter((bank) => bank.sectionInUI === 2).length === 0}>
-                  <Typography color="textYellow" align="center" variant="h4" gutterBottom>
-                    Earn BSHARE by staking PancakeSwap LP
+                  <Typography color="textPrimary" align="center" variant="h4" gutterBottom>
+                    Earn ESHARE by staking PancakeSwap LP
                   </Typography>
                   {/* <Alert variant="filled" severity="info">
                     <h4>
@@ -64,12 +64,12 @@ const Farm = () => {
                 </div>
 
                 <div hidden={activeBanks.filter((bank) => bank.sectionInUI === 1).length === 0}>
-                  <Typography color="textPrimary" variant="h4" gutterBottom style={{marginTop: '20px'}}>
-                    Inactive ApeSwap Farms
+                  <Typography color="textPrimary" align="center" variant="h4" gutterBottom style={{marginTop: '20px'}}>
+                  Earn EMP by staking PancakeSwap LP
                   </Typography>
-                  <Alert variant="filled" severity="warning">
+                  {/* <Alert variant="filled" severity="warning">
                     Please remove funds from all farms which are not active.
-                  </Alert>
+                  </Alert> */}
                   <Grid container spacing={3} style={{marginTop: '20px', display: 'flex', alignItems: 'center'}}>
                     {activeBanks
                       .filter((bank) => bank.sectionInUI === 1)
@@ -82,7 +82,7 @@ const Farm = () => {
                 </div>
 
                 <div hidden={activeBanks.filter((bank) => bank.sectionInUI === 0).length === 0}>
-                  <Typography color="textPrimary" variant="h4" gutterBottom style={{marginTop: '20px'}}>
+                  <Typography color="textPrimary" align="center" variant="h4" gutterBottom style={{marginTop: '20px'}}>
                     Genesis Pools
                   </Typography>
                   <Alert variant="filled" severity="warning">

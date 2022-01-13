@@ -1,18 +1,18 @@
 import {useCallback, useEffect, useState} from 'react';
 
-import useBombFinance from './useBombFinance';
+import useEmpFinance from './useEmpFinance';
 import config from '../config';
-import ERC20 from '../bomb-finance/ERC20';
+import ERC20 from '../emp-finance/ERC20';
 
 const useStakedTokenPriceInDollars = (stakedTokenName: string, stakedToken: ERC20) => {
   const [stakedTokenPriceInDollars, setStakedTokenPriceInDollars] = useState('0');
-  const bombFinance = useBombFinance();
-  const isUnlocked = bombFinance?.isUnlocked;
+  const empFinance = useEmpFinance();
+  const isUnlocked = empFinance?.isUnlocked;
 
   const fetchBalance = useCallback(async () => {
-    const balance = await bombFinance.getDepositTokenPriceInDollars(stakedTokenName, stakedToken);
+    const balance = await empFinance.getDepositTokenPriceInDollars(stakedTokenName, stakedToken);
     setStakedTokenPriceInDollars(balance);
-  }, [stakedToken, stakedTokenName, bombFinance]);
+  }, [stakedToken, stakedTokenName, empFinance]);
 
   useEffect(() => {
     if (isUnlocked) {
@@ -21,7 +21,7 @@ const useStakedTokenPriceInDollars = (stakedTokenName: string, stakedToken: ERC2
       const refreshStakedTokenPriceInDollars = setInterval(fetchBalance, config.refreshInterval);
       return () => clearInterval(refreshStakedTokenPriceInDollars);
     }
-  }, [isUnlocked, setStakedTokenPriceInDollars, bombFinance, fetchBalance]);
+  }, [isUnlocked, setStakedTokenPriceInDollars, empFinance, fetchBalance]);
 
   return stakedTokenPriceInDollars;
 };

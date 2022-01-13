@@ -28,7 +28,7 @@ import DepositModal from './DepositModal';
 import WithdrawModal from './WithdrawModal';
 import ZapModal from './ZapModal';
 import TokenSymbol from '../../../components/TokenSymbol';
-import {Bank} from '../../../bomb-finance';
+import {Bank} from '../../../emp-finance';
 
 interface StakeProps {
   bank: Bank;
@@ -106,7 +106,7 @@ const Stake: React.FC<StakeProps> = ({bank}) => {
                  <Typography style={{textTransform: 'uppercase', color: '#fffff'}}>
                       {`≈ $${earnedInDollars}`}
             </Typography>
-               <Typography style={{textTransform: 'uppercase', color: '#f9d749'}}>
+               <Typography style={{textTransform: 'uppercase', color: '#155aca'}}>
               {`${bank.depositTokenName} Staked`}
                     </Typography>
             {/* <Label text={`${bank.depositTokenName} Staked`} /> */}
@@ -140,8 +140,8 @@ const Stake: React.FC<StakeProps> = ({bank}) => {
                 <IconButton
                   disabled={
                     bank.closedForStaking ||
-                    bank.depositTokenName === 'BOMB-BTCB-APELP' ||
-                    bank.depositTokenName === 'BOMB-BTCB-LP'
+                    bank.depositTokenName === 'EMP-ETH-APELP' ||
+                    bank.depositTokenName === 'EMP-ETH-LP'
                   }
                   onClick={() => (bank.closedForStaking ? null : onPresentZap())}
                 >

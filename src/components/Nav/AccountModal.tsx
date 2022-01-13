@@ -6,20 +6,20 @@ import {getDisplayBalance} from '../../utils/formatBalance';
 import Label from '../Label';
 import Modal, {ModalProps} from '../Modal';
 import ModalTitle from '../ModalTitle';
-import useBombFinance from '../../hooks/useBombFinance';
+import useEmpFinance from '../../hooks/useEmpFinance';
 import TokenSymbol from '../TokenSymbol';
 import {useMediaQuery} from '@material-ui/core';
 
 const AccountModal: React.FC<ModalProps> = ({onDismiss}) => {
-  const bombFinance = useBombFinance();
+  const empFinance = useEmpFinance();
 
-  const bombBalance = useTokenBalance(bombFinance.BOMB);
-  const displayBombBalance = useMemo(() => getDisplayBalance(bombBalance), [bombBalance]);
+  const empBalance = useTokenBalance(empFinance.EMP);
+  const displayEmpBalance = useMemo(() => getDisplayBalance(empBalance), [empBalance]);
 
-  const bshareBalance = useTokenBalance(bombFinance.BSHARE);
-  const displayBshareBalance = useMemo(() => getDisplayBalance(bshareBalance), [bshareBalance]);
+  const bshareBalance = useTokenBalance(empFinance.ESHARE);
+  const displayEshareBalance = useMemo(() => getDisplayBalance(bshareBalance), [bshareBalance]);
 
-  const bbondBalance = useTokenBalance(bombFinance.BBOND);
+  const bbondBalance = useTokenBalance(empFinance.EBOND);
   const displayBbondBalance = useMemo(() => getDisplayBalance(bbondBalance), [bbondBalance]);
 
   const matches = useMediaQuery('(min-width:900px)');
@@ -30,26 +30,26 @@ const AccountModal: React.FC<ModalProps> = ({onDismiss}) => {
 
       <Balances style={{display: 'flex', flexDirection: matches ? 'row' : 'column'}}>
         <StyledBalanceWrapper style={{paddingBottom: '15px'}}>
-          <TokenSymbol symbol="BOMB" />
+          <TokenSymbol symbol="EMP" />
           <StyledBalance>
-            <StyledValue>{displayBombBalance}</StyledValue>
-            <Label text="BOMB Available" />
+            <StyledValue>{displayEmpBalance}</StyledValue>
+            <Label text="EMP Available" />
           </StyledBalance>
         </StyledBalanceWrapper>
 
         <StyledBalanceWrapper style={{paddingBottom: '15px'}}>
-          <TokenSymbol symbol="BSHARE" />
+          <TokenSymbol symbol="ESHARE" />
           <StyledBalance>
-            <StyledValue>{displayBshareBalance}</StyledValue>
-            <Label text="BSHARE Available" />
+            <StyledValue>{displayEshareBalance}</StyledValue>
+            <Label text="ESHARE Available" />
           </StyledBalance>
         </StyledBalanceWrapper>
 
         <StyledBalanceWrapper style={{paddingBottom: '15px'}}>
-          <TokenSymbol symbol="BBOND" />
+          <TokenSymbol symbol="EBOND" />
           <StyledBalance>
             <StyledValue>{displayBbondBalance}</StyledValue>
-            <Label text="BBOND Available" />
+            <Label text="EBOND Available" />
           </StyledBalance>
         </StyledBalanceWrapper>
       </Balances>

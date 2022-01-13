@@ -1,26 +1,26 @@
 import React, {useCallback, useEffect, useState} from 'react';
 import Context from './context';
-import useBombFinance from '../../hooks/useBombFinance';
-import {Bank} from '../../bomb-finance';
+import useEmpFinance from '../../hooks/useEmpFinance';
+import {Bank} from '../../emp-finance';
 import config, {bankDefinitions} from '../../config';
 
 const Banks: React.FC = ({children}) => {
   const [banks, setBanks] = useState<Bank[]>([]);
-  const bombFinance = useBombFinance();
-  const isUnlocked = bombFinance?.isUnlocked;
+  const empFinance = useEmpFinance();
+  const isUnlocked = empFinance?.isUnlocked;
 
   const fetchPools = useCallback(async () => {
     const banks: Bank[] = [];
 
     for (const bankInfo of Object.values(bankDefinitions)) {
       if (bankInfo.finished) {
-        if (!bombFinance.isUnlocked) continue;
+        if (!empFinance.isUnlocked) continue;
 
         // only show pools staked by user
-        const balance = await bombFinance.stakedBalanceOnBank(
+        const balance = await empFinance.stakedBalanceOnBank(
           bankInfo.contract,
           bankInfo.poolId,
-          bombFinance.myAccount,
+          empFinance.myAccount,
         );
         if (balance.lte(0)) {
           continue;
@@ -29,19 +29,19 @@ const Banks: React.FC = ({children}) => {
       banks.push({
         ...bankInfo,
         address: config.deployments[bankInfo.contract].address,
-        depositToken: bombFinance.externalTokens[bankInfo.depositTokenName],
-        earnToken: bankInfo.earnTokenName === 'BOMB' ? bombFinance.BOMB : bombFinance.BSHARE,
+        depositToken: empFinance.externalTokens[bankInfo.depositTokenName],
+        earnToken: bankInfo.earnTokenName === 'EMP' ? empFinance.EMP : empFinance.ESHARE,
       });
     }
     banks.sort((a, b) => (a.sort > b.sort ? 1 : -1));
     setBanks(banks);
-  }, [bombFinance, setBanks]);
+  }, [empFinance, setBanks]);
 
   useEffect(() => {
-    if (bombFinance) {
+    if (empFinance) {
       fetchPools().catch((err) => console.error(`Failed to fetch pools: ${err.stack}`));
     }
-  }, [isUnlocked, bombFinance, fetchPools]);
+  }, [isUnlocked, empFinance, fetchPools]);
 
   return <Context.Provider value={{banks}}>{children}</Context.Provider>;
 };

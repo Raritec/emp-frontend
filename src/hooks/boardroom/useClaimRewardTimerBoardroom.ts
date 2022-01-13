@@ -1,19 +1,19 @@
 import {useEffect, useState} from 'react';
-import useBombFinance from '../useBombFinance';
-import {AllocationTime} from '../../bomb-finance/types';
+import useEmpFinance from '../useEmpFinance';
+import {AllocationTime} from '../../emp-finance/types';
 
 const useClaimRewardTimerBoardroom = () => {
   const [time, setTime] = useState<AllocationTime>({
     from: new Date(),
     to: new Date(),
   });
-  const bombFinance = useBombFinance();
+  const empFinance = useEmpFinance();
 
   useEffect(() => {
-    if (bombFinance) {
-      bombFinance.getUserClaimRewardTime().then(setTime);
+    if (empFinance) {
+      empFinance.getUserClaimRewardTime().then(setTime);
     }
-  }, [bombFinance]);
+  }, [empFinance]);
   return time;
 };
 

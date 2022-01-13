@@ -9,12 +9,12 @@ import PageHeader from '../../components/PageHeader';
 import {Box, /* Paper, Typography,*/ Button, Grid} from '@material-ui/core';
 import styled from 'styled-components';
 import Spacer from '../../components/Spacer';
-import useBombFinance from '../../hooks/useBombFinance';
+import useEmpFinance from '../../hooks/useEmpFinance';
 import {getDisplayBalance /*, getBalance*/} from '../../utils/formatBalance';
 import {BigNumber /*, ethers*/} from 'ethers';
-import useSwapBBondToBShare from '../../hooks/BShareSwapper/useSwapBBondToBShare';
+import useSwapEBondToEShare from '../../hooks/EShareSwapper/useSwapEBondToEShare';
 import useApprove, {ApprovalState} from '../../hooks/useApprove';
-import useBShareSwapperStats from '../../hooks/BShareSwapper/useBShareSwapperStats';
+import useEShareSwapperStats from '../../hooks/EShareSwapper/useEShareSwapperStats';
 import TokenInput from '../../components/TokenInput';
 import Card from '../../components/Card';
 import CardContent from '../../components/CardContent';
@@ -35,13 +35,13 @@ function isNumeric(n: any) {
 const Sbs: React.FC = () => {
   const {path} = useRouteMatch();
   const {account} = useWallet();
-  const bombFinance = useBombFinance();
+  const empFinance = useEmpFinance();
   const [bbondAmount, setBbondAmount] = useState('');
-  const [bshareAmount, setBshareAmount] = useState('');
+  const [bshareAmount, setEshareAmount] = useState('');
 
-  const [approveStatus, approve] = useApprove(bombFinance.BBOND, bombFinance.contracts.BShareSwapper.address);
-  const {onSwapBShare} = useSwapBBondToBShare();
-  const bshareSwapperStat = useBShareSwapperStats(account);
+  const [approveStatus, approve] = useApprove(empFinance.EBOND, empFinance.contracts.EShareSwapper.address);
+  const {onSwapEShare} = useSwapEBondToEShare();
+  const bshareSwapperStat = useEShareSwapperStats(account);
 
   const bshareBalance = useMemo(
     () => (bshareSwapperStat ? Number(bshareSwapperStat.bshareBalance) : 0),
@@ -52,49 +52,49 @@ const Sbs: React.FC = () => {
     [bshareSwapperStat],
   );
 
-  const handleBBondChange = async (e: any) => {
+  const handleEBondChange = async (e: any) => {
     if (e.currentTarget.value === '') {
       setBbondAmount('');
-      setBshareAmount('');
+      setEshareAmount('');
       return;
     }
     if (!isNumeric(e.currentTarget.value)) return;
     setBbondAmount(e.currentTarget.value);
-    const updateBShareAmount = await bombFinance.estimateAmountOfBShare(e.currentTarget.value);
-    setBshareAmount(updateBShareAmount);
+    const updateEShareAmount = await empFinance.estimateAmountOfEShare(e.currentTarget.value);
+    setEshareAmount(updateEShareAmount);
   };
 
-  const handleBBondSelectMax = async () => {
+  const handleEBondSelectMax = async () => {
     setBbondAmount(String(bondBalance));
-    const updateBShareAmount = await bombFinance.estimateAmountOfBShare(String(bondBalance));
-    setBshareAmount(updateBShareAmount);
+    const updateEShareAmount = await empFinance.estimateAmountOfEShare(String(bondBalance));
+    setEshareAmount(updateEShareAmount);
   };
 
-  const handleBShareSelectMax = async () => {
-    setBshareAmount(String(bshareBalance));
-    const rateBSharePerBomb = (await bombFinance.getBShareSwapperStat(account)).rateBSharePerBomb;
-    const updateBBondAmount = BigNumber.from(10)
+  const handleEShareSelectMax = async () => {
+    setEshareAmount(String(bshareBalance));
+    const rateESharePerEmp = (await empFinance.getEShareSwapperStat(account)).rateESharePerEmp;
+    const updateEBondAmount = BigNumber.from(10)
       .pow(30)
-      .div(BigNumber.from(rateBSharePerBomb))
+      .div(BigNumber.from(rateESharePerEmp))
       .mul(Number(bshareBalance) * 1e6);
-    setBbondAmount(getDisplayBalance(updateBBondAmount, 18, 6));
+    setBbondAmount(getDisplayBalance(updateEBondAmount, 18, 6));
   };
 
-  const handleBShareChange = async (e: any) => {
+  const handleEShareChange = async (e: any) => {
     const inputData = e.currentTarget.value;
     if (inputData === '') {
-      setBshareAmount('');
+      setEshareAmount('');
       setBbondAmount('');
       return;
     }
     if (!isNumeric(inputData)) return;
-    setBshareAmount(inputData);
-    const rateBSharePerBomb = (await bombFinance.getBShareSwapperStat(account)).rateBSharePerBomb;
-    const updateBBondAmount = BigNumber.from(10)
+    setEshareAmount(inputData);
+    const rateESharePerEmp = (await empFinance.getEShareSwapperStat(account)).rateESharePerEmp;
+    const updateEBondAmount = BigNumber.from(10)
       .pow(30)
-      .div(BigNumber.from(rateBSharePerBomb))
+      .div(BigNumber.from(rateESharePerEmp))
       .mul(Number(inputData) * 1e6);
-    setBbondAmount(getDisplayBalance(updateBBondAmount, 18, 6));
+    setBbondAmount(getDisplayBalance(updateEBondAmount, 18, 6));
   };
 
   return (
@@ -104,7 +104,7 @@ const Sbs: React.FC = () => {
         {!!account ? (
           <>
             <Route exact path={path}>
-              <PageHeader icon={'🏦'} title="BBond -> BShare Swap" subtitle="Swap BBond to BShare" />
+              <PageHeader icon={'🏦'} title="EBond -> EShare Swap" subtitle="Swap EBond to EShare" />
             </Route>
             <Box mt={5}>
               <Grid container justify="center" spacing={6}>
@@ -114,24 +114,24 @@ const Sbs: React.FC = () => {
                       <Card>
                         <CardContent>
                           <StyledCardContentInner>
-                            <StyledCardTitle>BBonds</StyledCardTitle>
+                            <StyledCardTitle>EBonds</StyledCardTitle>
                             <StyledExchanger>
                               <StyledToken>
                                 <StyledCardIcon>
-                                  <TokenSymbol symbol={bombFinance.BBOND.symbol} size={54} />
+                                  <TokenSymbol symbol={empFinance.EBOND.symbol} size={54} />
                                 </StyledCardIcon>
                               </StyledToken>
                             </StyledExchanger>
                             <Grid item xs={12}>
                               <TokenInput
-                                onSelectMax={handleBBondSelectMax}
-                                onChange={handleBBondChange}
+                                onSelectMax={handleEBondSelectMax}
+                                onChange={handleEBondChange}
                                 value={bbondAmount}
                                 max={bondBalance}
-                                symbol="BBond"
+                                symbol="EBond"
                               ></TokenInput>
                             </Grid>
-                            <StyledDesc>{`${bondBalance} BBOND Available in Wallet`}</StyledDesc>
+                            <StyledDesc>{`${bondBalance} EBOND Available in Wallet`}</StyledDesc>
                           </StyledCardContentInner>
                         </CardContent>
                       </Card>
@@ -141,24 +141,24 @@ const Sbs: React.FC = () => {
                       <Card>
                         <CardContent>
                           <StyledCardContentInner>
-                            <StyledCardTitle>BShare</StyledCardTitle>
+                            <StyledCardTitle>EShare</StyledCardTitle>
                             <StyledExchanger>
                               <StyledToken>
                                 <StyledCardIcon>
-                                  <TokenSymbol symbol={bombFinance.BSHARE.symbol} size={54} />
+                                  <TokenSymbol symbol={empFinance.ESHARE.symbol} size={54} />
                                 </StyledCardIcon>
                               </StyledToken>
                             </StyledExchanger>
                             <Grid item xs={12}>
                               <TokenInput
-                                onSelectMax={handleBShareSelectMax}
-                                onChange={handleBShareChange}
+                                onSelectMax={handleEShareSelectMax}
+                                onChange={handleEShareChange}
                                 value={bshareAmount}
                                 max={bshareBalance}
-                                symbol="BShare"
+                                symbol="EShare"
                               ></TokenInput>
                             </Grid>
-                            <StyledDesc>{`${bshareBalance} BSHARE Available in Swapper`}</StyledDesc>
+                            <StyledDesc>{`${bshareBalance} ESHARE Available in Swapper`}</StyledDesc>
                           </StyledCardContentInner>
                         </CardContent>
                       </Card>
@@ -182,13 +182,13 @@ const Sbs: React.FC = () => {
                             onClick={approve}
                             size="medium"
                           >
-                            Approve BBOND
+                            Approve EBOND
                           </Button>
                         ) : (
                           <Button
                             color="primary"
                             variant="contained"
-                            onClick={() => onSwapBShare(bbondAmount.toString())}
+                            onClick={() => onSwapEShare(bbondAmount.toString())}
                             size="medium"
                           >
                             Swap

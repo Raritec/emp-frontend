@@ -6,7 +6,7 @@ import {Typography, Table, TableBody, TableCell, TableContainer, TableHead, Tabl
 import Page from '../../components/Page';
 import RegulationsImage from '../../assets/img/regulations_bg.png';
 import {createGlobalStyle} from 'styled-components';
-import useBombFinance from '../../hooks/useBombFinance';
+import useEmpFinance from '../../hooks/useEmpFinance';
 
 const BackgroundImage = createGlobalStyle`
   body, html {
@@ -46,15 +46,15 @@ const StyledTableRow = withStyles((theme) => ({
 
 const Regulations = () => {
   const classes = useStyles();
-  const bombFinance = useBombFinance();
+  const empFinance = useEmpFinance();
   const [rows, setRows] = useState(null);
   function createData(epoch, dao, dev, boardroom, bondsBought, bondsRedeemed) {
     var sum = (Number(dao) + Number(dev) + Number(boardroom)).toFixed(2);
     return {epoch, dao, dev, boardroom, sum, bondsBought, bondsRedeemed};
   }
   useEffect(() => {
-    if (bombFinance) {
-      const thisData = bombFinance.listenForRegulationsEvents();
+    if (empFinance) {
+      const thisData = empFinance.listenForRegulationsEvents();
       thisData.then((elements) => {
         setRows(
           elements
@@ -72,7 +72,7 @@ const Regulations = () => {
         );
       });
     }
-  }, [bombFinance]);
+  }, [empFinance]);
 
   return (
     <Page>

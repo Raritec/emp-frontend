@@ -21,7 +21,7 @@ import {getDisplayBalance} from '../../../utils/formatBalance';
 
 import DepositModal from './DepositModal';
 import WithdrawModal from './WithdrawModal';
-import useBombFinance from '../../../hooks/useBombFinance';
+import useEmpFinance from '../../../hooks/useEmpFinance';
 import ProgressCountdown from './ProgressCountdown';
 import useStakedBalanceOnBoardroom from '../../../hooks/useStakedBalanceOnBoardroom';
 import useStakedTokenPriceInDollars from '../../../hooks/useStakedTokenPriceInDollars';
@@ -31,14 +31,14 @@ import useStakeToBoardroom from '../../../hooks/useStakeToBoardroom';
 import useWithdrawFromBoardroom from '../../../hooks/useWithdrawFromBoardroom';
 
 const Stake: React.FC = () => {
-  const bombFinance = useBombFinance();
-  const [approveStatus, approve] = useApprove(bombFinance.BSHARE, bombFinance.contracts.Boardroom.address);
+  const empFinance = useEmpFinance();
+  const [approveStatus, approve] = useApprove(empFinance.ESHARE, empFinance.contracts.Boardroom.address);
 
-  const tokenBalance = useTokenBalance(bombFinance.BSHARE);
+  const tokenBalance = useTokenBalance(empFinance.ESHARE);
   const stakedBalance = useStakedBalanceOnBoardroom();
   const {from, to} = useUnstakeTimerBoardroom();
 
-  const stakedTokenPriceInDollars = useStakedTokenPriceInDollars('BSHARE', bombFinance.BSHARE);
+  const stakedTokenPriceInDollars = useStakedTokenPriceInDollars('ESHARE', empFinance.ESHARE);
   const tokenPriceInDollars = useMemo(
     () =>
       stakedTokenPriceInDollars
@@ -59,7 +59,7 @@ const Stake: React.FC = () => {
         onStake(value);
         onDismissDeposit();
       }}
-      tokenName={'BShare'}
+      tokenName={'EShare'}
     />,
   );
 
@@ -70,7 +70,7 @@ const Stake: React.FC = () => {
         onWithdraw(value);
         onDismissWithdraw();
       }}
-      tokenName={'BShare'}
+      tokenName={'EShare'}
     />,
   );
 
@@ -81,11 +81,11 @@ const Stake: React.FC = () => {
           <StyledCardContentInner>
             <StyledCardHeader>
               <CardIcon>
-                <TokenSymbol symbol="BSHARE" />
+                <TokenSymbol symbol="ESHARE" />
               </CardIcon>
               <Value value={getDisplayBalance(stakedBalance)} />
               <Label text={`≈ $${tokenPriceInDollars}`} variant="yellow" />
-              <Label text={'BSHARE Staked'} variant="yellow" />
+              <Label text={'ESHARE Staked'} variant="yellow" />
             </StyledCardHeader>
             <StyledCardActions>
               {approveStatus !== ApprovalState.APPROVED ? (
@@ -95,7 +95,7 @@ const Stake: React.FC = () => {
                   style={{marginTop: '20px'}}
                   onClick={approve}
                 >
-                  Approve BSHARE
+                  Approve ESHARE
                 </Button>
               ) : (
                 <>

@@ -4,16 +4,16 @@ import {createGlobalStyle} from 'styled-components';
 import CountUp from 'react-countup';
 import CardIcon from '../../components/CardIcon';
 import TokenSymbol from '../../components/TokenSymbol';
-import useBombStats from '../../hooks/useBombStats';
+import useEmpStats from '../../hooks/useEmpStats';
 import useLpStats from '../../hooks/useLpStats';
-import useLpStatsBTC from '../../hooks/useLpStatsBTC';
+import useLpStatsETH from '../../hooks/useLpStatsETH';
 import useModal from '../../hooks/useModal';
 import useZap from '../../hooks/useZap';
 import useBondStats from '../../hooks/useBondStats';
-import usebShareStats from '../../hooks/usebShareStats';
+import useeShareStats from '../../hooks/useeShareStats';
 import useTotalValueLocked from '../../hooks/useTotalValueLocked';
-import {Bomb as bombTesting, BShare as bShareTesting} from '../../bomb-finance/deployments/deployments.testing.json';
-import {Bomb as bombProd, BShare as bShareProd} from '../../bomb-finance/deployments/deployments.mainnet.json';
+import {Emp as empTesting, EShare as eShareTesting} from '../../emp-finance/deployments/deployments.testing.json';
+import {Emp as empProd, EShare as eShareProd} from '../../emp-finance/deployments/deployments.mainnet.json';
 import {roundAndFormatNumber} from '../../0x';
 import MetamaskFox from '../../assets/img/metamask-fox.svg';
 
@@ -21,10 +21,10 @@ import {Box, Button, Card, CardContent, Grid, Paper} from '@material-ui/core';
 import ZapModal from '../Bank/components/ZapModal';
 
 import {makeStyles} from '@material-ui/core/styles';
-import useBombFinance from '../../hooks/useBombFinance';
+import useEmpFinance from '../../hooks/useEmpFinance';
 import {ReactComponent as IconTelegram} from '../../assets/img/telegram.svg';
 
-import BombImage from '../../assets/img/bomb.png';
+import EmpImage from '../../assets/img/emp-final.gif';
 
 import HomeImage from '../../assets/img/background.jpg';
 const BackgroundImage = createGlobalStyle`
@@ -53,51 +53,53 @@ const useStyles = makeStyles((theme) => ({
 const Home = () => {
   const classes = useStyles();
   const TVL = useTotalValueLocked();
-  const bombFtmLpStats = useLpStatsBTC('BOMB-BTCB-LP');
-  const bShareFtmLpStats = useLpStats('BSHARE-BNB-LP');
-  const bombStats = useBombStats();
-  const bShareStats = usebShareStats();
+  const empFtmLpStats = useLpStatsETH('EMP-ETH-LP');
+  const eShareFtmLpStats = useLpStats('ESHARE-BNB-LP');
+  const empStats = useEmpStats();
+  const eShareStats = useeShareStats();
   const tBondStats = useBondStats();
-  const bombFinance = useBombFinance();
+  const empFinance = useEmpFinance();
 
-  let bomb;
-  let bShare;
+  let emp;
+  let eShare;
   if (!process.env.NODE_ENV || process.env.NODE_ENV === 'development') {
-    bomb = bombTesting;
-    bShare = bShareTesting;
+    emp = empTesting;
+    eShare = eShareTesting;
   } else {
-    bomb = bombProd;
-    bShare = bShareProd;
+    emp = empProd;
+    eShare = eShareProd;
   }
 
-  const buyBombAddress =
-    'https://pancakeswap.finance/swap?inputCurrency=0x7130d2A12B9BCbFAe4f2634d864A1Ee1Ce3Ead9c&outputCurrency=' +
-    bomb.address;
-  const buyBShareAddress = 'https://pancakeswap.finance/swap?outputCurrency=0x531780FAcE85306877D7e1F05d713D1B50a37F7A';
+  const buyEmpAddress =
+    'https://pancakeswap.finance/swap?inputCurrency=0x2170ed0880ac9a755fd29b2688956bd959f933f8&outputCurrency=' +
+    emp.address;
+  const buyEShareAddress = 
+    'https://pancakeswap.finance/swap?outputCurrency=' + 
+    eShare.address;
 
-  const bombLPStats = useMemo(() => (bombFtmLpStats ? bombFtmLpStats : null), [bombFtmLpStats]);
-  const bshareLPStats = useMemo(() => (bShareFtmLpStats ? bShareFtmLpStats : null), [bShareFtmLpStats]);
-  const bombPriceInDollars = useMemo(
-    () => (bombStats ? Number(bombStats.priceInDollars).toFixed(2) : null),
-    [bombStats],
+  const empLPStats = useMemo(() => (empFtmLpStats ? empFtmLpStats : null), [empFtmLpStats]);
+  const bshareLPStats = useMemo(() => (eShareFtmLpStats ? eShareFtmLpStats : null), [eShareFtmLpStats]);
+  const empPriceInDollars = useMemo(
+    () => (empStats ? Number(empStats.priceInDollars).toFixed(2) : null),
+    [empStats],
   );
-  const bombPriceInBNB = useMemo(() => (bombStats ? Number(bombStats.tokenInFtm).toFixed(4) : null), [bombStats]);
-  const bombCirculatingSupply = useMemo(() => (bombStats ? String(bombStats.circulatingSupply) : null), [bombStats]);
-  const bombTotalSupply = useMemo(() => (bombStats ? String(bombStats.totalSupply) : null), [bombStats]);
+  const empPriceInBNB = useMemo(() => (empStats ? Number(empStats.tokenInFtm).toFixed(4) : null), [empStats]);
+  const empCirculatingSupply = useMemo(() => (empStats ? String(empStats.circulatingSupply) : null), [empStats]);
+  const empTotalSupply = useMemo(() => (empStats ? String(empStats.totalSupply) : null), [empStats]);
 
-  const bSharePriceInDollars = useMemo(
-    () => (bShareStats ? Number(bShareStats.priceInDollars).toFixed(2) : null),
-    [bShareStats],
+  const eSharePriceInDollars = useMemo(
+    () => (eShareStats ? Number(eShareStats.priceInDollars).toFixed(2) : null),
+    [eShareStats],
   );
-  const bSharePriceInBNB = useMemo(
-    () => (bShareStats ? Number(bShareStats.tokenInFtm).toFixed(4) : null),
-    [bShareStats],
+  const eSharePriceInBNB = useMemo(
+    () => (eShareStats ? Number(eShareStats.tokenInFtm).toFixed(4) : null),
+    [eShareStats],
   );
-  const bShareCirculatingSupply = useMemo(
-    () => (bShareStats ? String(bShareStats.circulatingSupply) : null),
-    [bShareStats],
+  const eShareCirculatingSupply = useMemo(
+    () => (eShareStats ? String(eShareStats.circulatingSupply) : null),
+    [eShareStats],
   );
-  const bShareTotalSupply = useMemo(() => (bShareStats ? String(bShareStats.totalSupply) : null), [bShareStats]);
+  const eShareTotalSupply = useMemo(() => (eShareStats ? String(eShareStats.totalSupply) : null), [eShareStats]);
 
   const tBondPriceInDollars = useMemo(
     () => (tBondStats ? Number(tBondStats.priceInDollars).toFixed(2) : null),
@@ -110,30 +112,30 @@ const Home = () => {
   );
   const tBondTotalSupply = useMemo(() => (tBondStats ? String(tBondStats.totalSupply) : null), [tBondStats]);
 
-  const bombLpZap = useZap({depositTokenName: 'BOMB-BTCB-LP'});
-  const bshareLpZap = useZap({depositTokenName: 'BSHARE-BNB-LP'});
+  const empLpZap = useZap({depositTokenName: 'EMP-ETH-LP'});
+  const bshareLpZap = useZap({depositTokenName: 'ESHARE-BNB-LP'});
 
-  const [onPresentBombZap, onDissmissBombZap] = useModal(
+  const [onPresentEmpZap, onDissmissEmpZap] = useModal(
     <ZapModal
       decimals={18}
       onConfirm={(zappingToken, tokenName, amount) => {
         if (Number(amount) <= 0 || isNaN(Number(amount))) return;
-        bombLpZap.onZap(zappingToken, tokenName, amount);
-        onDissmissBombZap();
+        empLpZap.onZap(zappingToken, tokenName, amount);
+        onDissmissEmpZap();
       }}
-      tokenName={'BOMB-BTCB-LP'}
+      tokenName={'EMP-ETH-LP'}
     />,
   );
 
-  const [onPresentBshareZap, onDissmissBshareZap] = useModal(
+  const [onPresentEshareZap, onDissmissEshareZap] = useModal(
     <ZapModal
       decimals={18}
       onConfirm={(zappingToken, tokenName, amount) => {
         if (Number(amount) <= 0 || isNaN(Number(amount))) return;
         bshareLpZap.onZap(zappingToken, tokenName, amount);
-        onDissmissBshareZap();
+        onDissmissEshareZap();
       }}
-      tokenName={'BSHARE-BNB-LP'}
+      tokenName={'ESHARE-BNB-LP'}
     />,
   );
 
@@ -148,26 +150,26 @@ const Home = () => {
           sm={4}
           style={{display: 'flex', justifyContent: 'center', verticalAlign: 'middle', overflow: 'hidden'}}
         >
-          <img src={BombImage} style={{maxHeight: '240px'}} />
+          <img src={EmpImage} style={{maxHeight: '240px'}} />
         </Grid>
         {/* Explanation text */}
         <Grid item xs={12} sm={8}>
           <Paper>
             <Box p={4} style={{textAlign: 'center'}}>
-              <h2>Welcome to Bomb</h2>
+              <h2>Welcome to Emp</h2>
               <p>
-                BOMB is an algocoin which is designed to follow the price of BTC. Enjoy high yields normally only found
-                on high risk assets, but with exposure to BTC instead!
+                EMP is an algocoin which is designed to follow the price of ETH. Enjoy high yields normally only found
+                on high risk assets, but with exposure to ETH instead!
               </p>
               <p>
-                <strong>BOMB is pegged via algorithm to a 10,000:1 ratio to BTC. $100k BTC = $10 BOMB PEG</strong>
-                {/* Stake your BOMB-BTC LP in the Farm to earn BSHARE rewards. Then stake your earned BSHARE in the
-                Boardroom to earn more BOMB! */}
+                <strong>EMP is pegged via algorithm to a 4,000:1 ratio to ETH. $100k ETH = $10 EMP PEG</strong>
+                {/* Stake your EMP-ETH LP in the Farm to earn ESHARE rewards. Then stake your earned ESHARE in the
+                Boardroom to earn more EMP! */}
               </p>
               <p>
                 <IconTelegram alt="telegram" style={{fill: '#dddfee', height: '15px'}} /> Join our{' '}
                 <a
-                  href="https://t.me/bombmoneybsc"
+                  href="https://t.me/empmoney"
                   rel="noopener noreferrer"
                   target="_blank"
                   style={{color: '#dddfee'}}
@@ -185,7 +187,7 @@ const Home = () => {
 
             <Alert variant="filled" severity="warning">
               Board<br />
-              <b>Please unstake all BSHARE for now. Timer to withdraw will be removed shortly. </b><br />We are very sorry for the inconvenience.
+              <b>Please unstake all ESHARE for now. Timer to withdraw will be removed shortly. </b><br />We are very sorry for the inconvenience.
 
             </Alert>
 
@@ -215,36 +217,36 @@ const Home = () => {
               </Button>
               <Button
                 target="_blank"
-                href={buyBombAddress}
+                href={buyEmpAddress}
                 style={{margin: '10px'}}
                 className={'shinyButton ' + classes.button}
               >
-                Buy BOMB
+                Buy EMP
               </Button>
               <Button
                 target="_blank"
-                href={buyBShareAddress}
+                href={buyEShareAddress}
                 className={'shinyButton ' + classes.button}
                 style={{marginLeft: '10px'}}
               >
-                Buy BSHARE
+                Buy ESHARE
               </Button>
             </CardContent>
           </Card>
         </Grid>
 
-        {/* BOMB */}
+        {/* EMP */}
         <Grid item xs={12} sm={4}>
           <Card>
             <CardContent align="center" style={{position: 'relative'}}>
               <Box mt={2}>
                 <CardIcon>
-                  <TokenSymbol symbol="BOMB" />
+                  <TokenSymbol symbol="EMP" />
                 </CardIcon>
               </Box>
               <Button
                 onClick={() => {
-                  bombFinance.watchAssetInMetamask('BOMB');
+                  empFinance.watchAssetInMetamask('EMP');
                 }}
                 style={{position: 'absolute', top: '10px', right: '10px', border: '1px grey solid'}}
               >
@@ -252,32 +254,32 @@ const Home = () => {
                 <b>+</b>&nbsp;&nbsp;
                 <img alt="metamask fox" style={{width: '20px', filter: 'grayscale(100%)'}} src={MetamaskFox} />
               </Button>
-              <h2 style={{marginBottom: '10px'}}>BOMB</h2>
-              10,000 BOMB (1.0 Peg) =
+              <h2 style={{marginBottom: '10px'}}>EMP</h2>
+              4,000 EMP (1.0 Peg) =
               <Box>
-                <span style={{fontSize: '30px', color: 'white'}}>{bombPriceInBNB ? bombPriceInBNB : '-.----'} BTC</span>
+                <span style={{fontSize: '30px', color: 'white'}}>{empPriceInBNB ? empPriceInBNB : '-.----'} ETH</span>
               </Box>
               <Box>
                 <span style={{fontSize: '16px', alignContent: 'flex-start'}}>
-                  ${bombPriceInDollars ? roundAndFormatNumber(bombPriceInDollars, 2) : '-.--'} / BOMB
+                  ${empPriceInDollars ? roundAndFormatNumber(empPriceInDollars, 2) : '-.--'} / EMP
                 </span>
               </Box>
               <span style={{fontSize: '12px'}}>
-                Market Cap: ${roundAndFormatNumber(bombCirculatingSupply * bombPriceInDollars, 2)} <br />
-                Circulating Supply: {roundAndFormatNumber(bombCirculatingSupply, 2)} <br />
-                Total Supply: {roundAndFormatNumber(bombTotalSupply, 2)}
+                Market Cap: ${roundAndFormatNumber(empCirculatingSupply * empPriceInDollars, 2)} <br />
+                Circulating Supply: {roundAndFormatNumber(empCirculatingSupply, 2)} <br />
+                Total Supply: {roundAndFormatNumber(empTotalSupply, 2)}
               </span>
             </CardContent>
           </Card>
         </Grid>
 
-        {/* BSHARE */}
+        {/* ESHARE */}
         <Grid item xs={12} sm={4}>
           <Card>
             <CardContent align="center" style={{position: 'relative'}}>
               <Button
                 onClick={() => {
-                  bombFinance.watchAssetInMetamask('BSHARE');
+                  empFinance.watchAssetInMetamask('ESHARE');
                 }}
                 style={{position: 'absolute', top: '10px', right: '10px', border: '1px grey solid'}}
               >
@@ -287,36 +289,36 @@ const Home = () => {
               </Button>
               <Box mt={2}>
                 <CardIcon>
-                  <TokenSymbol symbol="BSHARE" />
+                  <TokenSymbol symbol="ESHARE" />
                 </CardIcon>
               </Box>
-              <h2 style={{marginBottom: '10px'}}>BSHARE</h2>
+              <h2 style={{marginBottom: '10px'}}>ESHARE</h2>
               Current Price
               <Box>
                 <span style={{fontSize: '30px', color: 'white'}}>
-                  {bSharePriceInBNB ? bSharePriceInBNB : '-.----'} BNB
+                  {eSharePriceInBNB ? eSharePriceInBNB : '-.----'} BNB
                 </span>
               </Box>
               <Box>
-                <span style={{fontSize: '16px'}}>${bSharePriceInDollars ? bSharePriceInDollars : '-.--'} / BSHARE</span>
+                <span style={{fontSize: '16px'}}>${eSharePriceInDollars ? eSharePriceInDollars : '-.--'} / ESHARE</span>
               </Box>
               <span style={{fontSize: '12px'}}>
-                Market Cap: ${roundAndFormatNumber((bShareCirculatingSupply * bSharePriceInDollars).toFixed(2), 2)}{' '}
+                Market Cap: ${roundAndFormatNumber((eShareCirculatingSupply * eSharePriceInDollars).toFixed(2), 2)}{' '}
                 <br />
-                Circulating Supply: {roundAndFormatNumber(bShareCirculatingSupply, 2)} <br />
-                Total Supply: {roundAndFormatNumber(bShareTotalSupply, 2)}
+                Circulating Supply: {roundAndFormatNumber(eShareCirculatingSupply, 2)} <br />
+                Total Supply: {roundAndFormatNumber(eShareTotalSupply, 2)}
               </span>
             </CardContent>
           </Card>
         </Grid>
 
-        {/* BBOND */}
+        {/* EBOND */}
         <Grid item xs={12} sm={4}>
           <Card>
             <CardContent align="center" style={{position: 'relative'}}>
               <Button
                 onClick={() => {
-                  bombFinance.watchAssetInMetamask('BBOND');
+                  empFinance.watchAssetInMetamask('EBOND');
                 }}
                 style={{position: 'absolute', top: '10px', right: '10px', border: '1px grey solid'}}
               >
@@ -326,18 +328,18 @@ const Home = () => {
               </Button>
               <Box mt={2}>
                 <CardIcon>
-                  <TokenSymbol symbol="BBOND" />
+                  <TokenSymbol symbol="EBOND" />
                 </CardIcon>
               </Box>
-              <h2 style={{marginBottom: '10px'}}>BBOND</h2>
-              10,000 BBOND
+              <h2 style={{marginBottom: '10px'}}>EBOND</h2>
+              4,000 EBOND
               <Box>
                 <span style={{fontSize: '30px', color: 'white'}}>
-                  {tBondPriceInBNB ? tBondPriceInBNB : '-.----'} BTC
+                  {tBondPriceInBNB ? tBondPriceInBNB : '-.----'} ETH
                 </span>
               </Box>
               <Box>
-                <span style={{fontSize: '16px'}}>${tBondPriceInDollars ? tBondPriceInDollars : '-.--'} / BBOND</span>
+                <span style={{fontSize: '16px'}}>${tBondPriceInDollars ? tBondPriceInDollars : '-.--'} / EBOND</span>
               </Box>
               <span style={{fontSize: '12px'}}>
                 Market Cap: ${roundAndFormatNumber((tBondCirculatingSupply * tBondPriceInDollars).toFixed(2), 2)} <br />
@@ -352,26 +354,26 @@ const Home = () => {
             <CardContent align="center">
               <Box mt={2}>
                 <CardIcon>
-                  <TokenSymbol symbol="BOMB-BTCB-LP" />
+                  <TokenSymbol symbol="EMP-ETH-LP" />
                 </CardIcon>
               </Box>
-              <h2>BOMB-BTCB PancakeSwap LP</h2>
+              <h2>EMP-ETH PancakeSwap LP</h2>
               <Box mt={2}>
-                <Button disabled onClick={onPresentBombZap} className="shinyButtonDisabledSecondary">
+                <Button disabled onClick={onPresentEmpZap} className="shinyButtonDisabledSecondary">
                   Zap In
                 </Button>
               </Box>
               <Box mt={2}>
                 <span style={{fontSize: '26px'}}>
-                  {bombLPStats?.tokenAmount ? bombLPStats?.tokenAmount : '-.--'} BOMB /{' '}
-                  {bombLPStats?.ftmAmount ? bombLPStats?.ftmAmount : '-.--'} BTCB
+                  {empLPStats?.tokenAmount ? empLPStats?.tokenAmount : '-.--'} EMP /{' '}
+                  {empLPStats?.ftmAmount ? empLPStats?.ftmAmount : '-.--'} ETH
                 </span>
               </Box>
-              <Box>${bombLPStats?.priceOfOne ? bombLPStats.priceOfOne : '-.--'}</Box>
+              <Box>${empLPStats?.priceOfOne ? empLPStats.priceOfOne : '-.--'}</Box>
               <span style={{fontSize: '12px'}}>
-                Liquidity: ${bombLPStats?.totalLiquidity ? roundAndFormatNumber(bombLPStats.totalLiquidity, 2) : '-.--'}{' '}
+                Liquidity: ${empLPStats?.totalLiquidity ? roundAndFormatNumber(empLPStats.totalLiquidity, 2) : '-.--'}{' '}
                 <br />
-                Total Supply: {bombLPStats?.totalSupply ? roundAndFormatNumber(bombLPStats.totalSupply, 2) : '-.--'}
+                Total Supply: {empLPStats?.totalSupply ? roundAndFormatNumber(empLPStats.totalSupply, 2) : '-.--'}
               </span>
             </CardContent>
           </Card>
@@ -381,18 +383,18 @@ const Home = () => {
             <CardContent align="center">
               <Box mt={2}>
                 <CardIcon>
-                  <TokenSymbol symbol="BSHARE-BNB-LP" />
+                  <TokenSymbol symbol="ESHARE-BNB-LP" />
                 </CardIcon>
               </Box>
-              <h2>BSHARE-BNB PancakeSwap LP</h2>
+              <h2>ESHARE-BNB PancakeSwap LP</h2>
               <Box mt={2}>
-                <Button onClick={onPresentBshareZap} className="shinyButtonSecondary">
+                <Button onClick={onPresentEshareZap} className="shinyButtonSecondary">
                   Zap In
                 </Button>
               </Box>
               <Box mt={2}>
                 <span style={{fontSize: '26px'}}>
-                  {bshareLPStats?.tokenAmount ? bshareLPStats?.tokenAmount : '-.--'} BSHARE /{' '}
+                  {bshareLPStats?.tokenAmount ? bshareLPStats?.tokenAmount : '-.--'} ESHARE /{' '}
                   {bshareLPStats?.ftmAmount ? bshareLPStats?.ftmAmount : '-.--'} BNB
                 </span>
               </Box>

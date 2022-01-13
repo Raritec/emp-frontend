@@ -4,15 +4,15 @@ import {createGlobalStyle} from 'styled-components';
 import HomeImage from '../../assets/img/background.jpg';
 import useLpStats from '../../hooks/useLpStats';
 import {Box, Button, Grid, Paper, Typography} from '@material-ui/core';
-import useBombStats from '../../hooks/useBombStats';
+import useEmpStats from '../../hooks/useEmpStats';
 import TokenInput from '../../components/TokenInput';
-import useBombFinance from '../../hooks/useBombFinance';
+import useEmpFinance from '../../hooks/useEmpFinance';
 import {useWallet} from 'use-wallet';
 import useTokenBalance from '../../hooks/useTokenBalance';
 import {getDisplayBalance} from '../../utils/formatBalance';
 import useApproveTaxOffice from '../../hooks/useApproveTaxOffice';
 import {ApprovalState} from '../../hooks/useApprove';
-import useProvideBombFtmLP from '../../hooks/useProvideBombFtmLP';
+import useProvideEmpFtmLP from '../../hooks/useProvideEmpFtmLP';
 import {Alert} from '@material-ui/lab';
 
 const BackgroundImage = createGlobalStyle`
@@ -27,34 +27,34 @@ function isNumeric(n) {
 }
 
 const ProvideLiquidity = () => {
-  const [bombAmount, setBombAmount] = useState(0);
+  const [empAmount, setEmpAmount] = useState(0);
   const [ftmAmount, setFtmAmount] = useState(0);
   const [lpTokensAmount, setLpTokensAmount] = useState(0);
   const {balance} = useWallet();
-  const bombStats = useBombStats();
-  const bombFinance = useBombFinance();
+  const empStats = useEmpStats();
+  const empFinance = useEmpFinance();
   const [approveTaxOfficeStatus, approveTaxOffice] = useApproveTaxOffice();
-  const bombBalance = useTokenBalance(bombFinance.BOMB);
-  const btcBalance = useTokenBalance(bombFinance.BTC);
+  const empBalance = useTokenBalance(empFinance.EMP);
+  const btcBalance = useTokenBalance(empFinance.ETH);
 
   const ftmBalance = (btcBalance / 1e18).toFixed(4);
-  const {onProvideBombFtmLP} = useProvideBombFtmLP();
-  const bombFtmLpStats = useLpStats('BOMB-BTCB-LP');
+  const {onProvideEmpFtmLP} = useProvideEmpFtmLP();
+  const empFtmLpStats = useLpStats('EMP-ETH-LP');
 
-  const bombLPStats = useMemo(() => (bombFtmLpStats ? bombFtmLpStats : null), [bombFtmLpStats]);
-  const bombPriceInBNB = useMemo(() => (bombStats ? Number(bombStats.tokenInFtm).toFixed(2) : null), [bombStats]);
-  const ftmPriceInBOMB = useMemo(() => (bombStats ? Number(1 / bombStats.tokenInFtm).toFixed(2) : null), [bombStats]);
+  const empLPStats = useMemo(() => (empFtmLpStats ? empFtmLpStats : null), [empFtmLpStats]);
+  const empPriceInBNB = useMemo(() => (empStats ? Number(empStats.tokenInFtm).toFixed(2) : null), [empStats]);
+  const ftmPriceInEMP = useMemo(() => (empStats ? Number(1 / empStats.tokenInFtm).toFixed(2) : null), [empStats]);
   // const classes = useStyles();
 
-  const handleBombChange = async (e) => {
+  const handleEmpChange = async (e) => {
     if (e.currentTarget.value === '' || e.currentTarget.value === 0) {
-      setBombAmount(e.currentTarget.value);
+      setEmpAmount(e.currentTarget.value);
     }
     if (!isNumeric(e.currentTarget.value)) return;
-    setBombAmount(e.currentTarget.value);
-    const quoteFromSpooky = await bombFinance.quoteFromSpooky(e.currentTarget.value, 'BOMB');
+    setEmpAmount(e.currentTarget.value);
+    const quoteFromSpooky = await empFinance.quoteFromSpooky(e.currentTarget.value, 'EMP');
     setFtmAmount(quoteFromSpooky);
-    setLpTokensAmount(quoteFromSpooky / bombLPStats.ftmAmount);
+    setLpTokensAmount(quoteFromSpooky / empLPStats.ftmAmount);
   };
 
   const handleFtmChange = async (e) => {
@@ -63,22 +63,22 @@ const ProvideLiquidity = () => {
     }
     if (!isNumeric(e.currentTarget.value)) return;
     setFtmAmount(e.currentTarget.value);
-    const quoteFromSpooky = await bombFinance.quoteFromSpooky(e.currentTarget.value, 'BTCB');
-    setBombAmount(quoteFromSpooky);
+    const quoteFromSpooky = await empFinance.quoteFromSpooky(e.currentTarget.value, 'ETH');
+    setEmpAmount(quoteFromSpooky);
 
-    setLpTokensAmount(quoteFromSpooky / bombLPStats.tokenAmount);
+    setLpTokensAmount(quoteFromSpooky / empLPStats.tokenAmount);
   };
-  const handleBombSelectMax = async () => {
-    const quoteFromSpooky = await bombFinance.quoteFromSpooky(getDisplayBalance(bombBalance), 'BOMB');
-    setBombAmount(getDisplayBalance(bombBalance));
+  const handleEmpSelectMax = async () => {
+    const quoteFromSpooky = await empFinance.quoteFromSpooky(getDisplayBalance(empBalance), 'EMP');
+    setEmpAmount(getDisplayBalance(empBalance));
     setFtmAmount(quoteFromSpooky);
-    setLpTokensAmount(quoteFromSpooky / bombLPStats.ftmAmount);
+    setLpTokensAmount(quoteFromSpooky / empLPStats.ftmAmount);
   };
   const handleFtmSelectMax = async () => {
-    const quoteFromSpooky = await bombFinance.quoteFromSpooky(ftmBalance, 'BNB');
+    const quoteFromSpooky = await empFinance.quoteFromSpooky(ftmBalance, 'BNB');
     setFtmAmount(ftmBalance);
-    setBombAmount(quoteFromSpooky);
-    setLpTokensAmount(ftmBalance / bombLPStats.ftmAmount);
+    setEmpAmount(quoteFromSpooky);
+    setLpTokensAmount(ftmBalance / empLPStats.ftmAmount);
   };
   return (
     <Page>
@@ -95,7 +95,7 @@ const ProvideLiquidity = () => {
               <a href="https://pancakeswap.finance/" rel="noopener noreferrer" target="_blank">
                 Pancakeswap
               </a>{' '}
-              are the only ways to provide Liquidity on BOMB-BTCB pair without paying tax.
+              are the only ways to provide Liquidity on EMP-ETH pair without paying tax.
             </b>
           </Alert>
           <Grid item xs={12} sm={12}>
@@ -106,11 +106,11 @@ const ProvideLiquidity = () => {
                     <Grid container>
                       <Grid item xs={12}>
                         <TokenInput
-                          onSelectMax={handleBombSelectMax}
-                          onChange={handleBombChange}
-                          value={bombAmount}
-                          max={getDisplayBalance(bombBalance)}
-                          symbol={'BOMB'}
+                          onSelectMax={handleEmpSelectMax}
+                          onChange={handleEmpChange}
+                          value={empAmount}
+                          max={getDisplayBalance(empBalance)}
+                          symbol={'EMP'}
                         ></TokenInput>
                       </Grid>
                       <Grid item xs={12}>
@@ -119,19 +119,19 @@ const ProvideLiquidity = () => {
                           onChange={handleFtmChange}
                           value={ftmAmount}
                           max={ftmBalance}
-                          symbol={'BTCB'}
+                          symbol={'ETH'}
                         ></TokenInput>
                       </Grid>
                       <Grid item xs={12}>
-                        <p>1 BOMB = {bombPriceInBNB} BNB</p>
-                        <p>1 BNB = {ftmPriceInBOMB} BOMB</p>
+                        <p>1 EMP = {empPriceInBNB} BNB</p>
+                        <p>1 BNB = {ftmPriceInEMP} EMP</p>
                         <p>LP tokens ≈ {lpTokensAmount.toFixed(2)}</p>
                       </Grid>
                       <Grid xs={12} justifyContent="center" style={{textAlign: 'center'}}>
                         {approveTaxOfficeStatus === ApprovalState.APPROVED ? (
                           <Button
                             variant="contained"
-                            onClick={() => onProvideBombFtmLP(ftmAmount.toString(), bombAmount.toString())}
+                            onClick={() => onProvideEmpFtmLP(ftmAmount.toString(), empAmount.toString())}
                             color="primary"
                             style={{margin: '0 10px', color: '#fff'}}
                           >

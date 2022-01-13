@@ -6,7 +6,7 @@ import {ThemeProvider as TP1} from 'styled-components';
 import {UseWalletProvider} from 'use-wallet';
 import usePromptNetwork from './hooks/useNetworkPrompt';
 import BanksProvider from './contexts/Banks';
-import BombFinanceProvider from './contexts/BombFinanceProvider';
+import EmpFinanceProvider from './contexts/BombFinanceProvider';
 import ModalsProvider from './contexts/Modals';
 import store from './state';
 import theme from './theme';
@@ -88,15 +88,15 @@ const Providers: React.FC = ({children}) => {
             walletconnect: {rpcUrl: config.defaultProvider},
             walletlink: {
               url: config.defaultProvider,
-              appName: 'bomb.money',
-              appLogoUrl: 'https://raw.githubusercontent.com/bombmoney/bomb-assets/master/bomb-512.png',
+              appName: 'emp.money',
+              appLogoUrl: 'https://raw.githubusercontent.com/empmoney/emp-assets/master/emp-512.png',
             },
           }}
         >
           <Provider store={store}>
             <Updaters />
             <RefreshContextProvider>
-              <BombFinanceProvider>
+              <EmpFinanceProvider>
                 <ModalsProvider>
                   <BanksProvider>
                     <>
@@ -105,7 +105,7 @@ const Providers: React.FC = ({children}) => {
                     </>
                   </BanksProvider>
                 </ModalsProvider>
-              </BombFinanceProvider>
+              </EmpFinanceProvider>
             </RefreshContextProvider>
           </Provider>
         </UseWalletProvider>

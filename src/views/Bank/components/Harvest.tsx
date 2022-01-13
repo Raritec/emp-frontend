@@ -13,9 +13,9 @@ import useHarvest from '../../../hooks/useHarvest';
 
 import {getDisplayBalance} from '../../../utils/formatBalance';
 import TokenSymbol from '../../../components/TokenSymbol';
-import {Bank} from '../../../bomb-finance';
-import useBombStats from '../../../hooks/useBombStats';
-import useShareStats from '../../../hooks/usebShareStats';
+import {Bank} from '../../../emp-finance';
+import useEmpStats from '../../../hooks/useEmpStats';
+import useShareStats from '../../../hooks/useeShareStats';
 
 interface HarvestProps {
   bank: Bank;
@@ -24,11 +24,11 @@ interface HarvestProps {
 const Harvest: React.FC<HarvestProps> = ({bank}) => {
   const earnings = useEarnings(bank.contract, bank.earnTokenName, bank.poolId);
   const {onReward} = useHarvest(bank);
-  const bombStats = useBombStats();
+  const empStats = useEmpStats();
   const tShareStats = useShareStats();
 
-  const tokenName = bank.earnTokenName === 'BSHARE' ? 'BSHARE' : 'BOMB';
-  const tokenStats = bank.earnTokenName === 'BSHARE' ? tShareStats : bombStats;
+  const tokenName = bank.earnTokenName === 'ESHARE' ? 'ESHARE' : 'EMP';
+  const tokenStats = bank.earnTokenName === 'ESHARE' ? tShareStats : empStats;
   const tokenPriceInDollars = useMemo(
     () => (tokenStats ? Number(tokenStats.priceInDollars).toFixed(2) : null),
     [tokenStats],
@@ -47,7 +47,7 @@ const Harvest: React.FC<HarvestProps> = ({bank}) => {
                       {`≈ $${earnedInDollars}`}
                     </Typography>
             {/* <Label text={`≈ $${earnedInDollars}`} /> */}
-                  <Typography style={{textTransform: 'uppercase', color: '#f9d749'}}>
+                  <Typography style={{textTransform: 'uppercase', color: '#155aca'}}>
               {`${tokenName} Earned`}
                     </Typography>
              {/* <Label text={`${tokenName} Earned`} /> */}
