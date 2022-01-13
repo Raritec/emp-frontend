@@ -35,4 +35,4 @@ npx prettier --write .
 - [Our project documentation](https://docs.emp.money/) will help you understand before start contributing
 - Join our [Discord](https://discord.emp.money) community
 - Or if you are more of a [Telegram Zombie](https://t.me/empmoneybsc) we have that too
-- Bugs? Use the [Issues](https://github.com/empmoney/emp-frontend/issues) section of our github to report them
+- Bugs? Use the [Issues](https://github.com/DrManhattan115/emp-frontend/issues) section of our github to report them

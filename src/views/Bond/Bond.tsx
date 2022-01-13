@@ -36,6 +36,7 @@ const Bond: React.FC = () => {
   const bondStat = useBondStats();
   const empStat = useEmpStats();
   const cashPrice = useCashPriceInLastTWAP();
+  console.log(cashPrice.toString(), BOND_REDEEM_PRICE_BN.toString())
 
   const bondsPurchasable = useBondsPurchasable();
 
