@@ -77,9 +77,9 @@ const configurations: {[env: string]: Configuration} = {
       'ESHARE-BNB-APELP': ['0x0dE2a71b2f43CF588A00422d41E1C02D0E08D552', 18],
       'EMP-ETH-APELP': ['0xB6E85031F313563bF12ea414118978C8BD78db5D', 18],
     },
-    baseLaunchDate: new Date('2021-11-20 1:00:00Z'),
-    bondLaunchesAt: new Date('2020-12-03T15:00:00Z'),
-    boardroomLaunchesAt: new Date('2021-11-20T00:00:00Z'),
+    baseLaunchDate: new Date('2022-01-17T23:00:00Z'),
+    bondLaunchesAt: new Date('2022-01-31T23:00:00Z'),
+    boardroomLaunchesAt: new Date('2022-01-17T00:00:00Z'),
     refreshInterval: 10000,
   },
 };
