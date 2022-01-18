@@ -15,7 +15,10 @@ import {createGlobalStyle} from 'styled-components';
 
 import useBanks from '../../hooks/useBanks';
 
-import HomeImage from '../../assets/img/background.jpg';
+import HomeImage from '../../assets/img/background.png';
+import LaunchCountdown from '../../components/LaunchCountdown';
+import config from '../../config';
+
 const BackgroundImage = createGlobalStyle`
   body {
     background: url(${HomeImage}) repeat !important;
@@ -29,10 +32,12 @@ const Farm = () => {
   const {path} = useRouteMatch();
   const {account} = useWallet();
   const activeBanks = banks.filter((bank) => !bank.finished);
+  const now = Date.now();
   return (
     <Switch>
       <Page>
-        <Route exact path={path}>
+        {now < config.baseLaunchDate.getTime() ? <LaunchCountdown deadline={config.baseLaunchDate} description='Home' descriptionLink='/' />
+         : <Route exact path={path}>
           <BackgroundImage />
           {!!account ? (
             <Container maxWidth="lg">
@@ -85,9 +90,9 @@ const Farm = () => {
                   <Typography color="textPrimary" align="center" variant="h4" gutterBottom style={{marginTop: '20px'}}>
                     Genesis Pools
                   </Typography>
-                  <Alert variant="filled" severity="warning">
+                  {/* <Alert variant="filled" severity="warning">
                     Genesis pools have ended. Please claim all rewards and remove funds from Genesis pools.
-                  </Alert>
+                  </Alert> */}
                   <Grid container spacing={3} style={{marginTop: '20px'}}>
                     {activeBanks
                       .filter((bank) => bank.sectionInUI === 0)
@@ -103,7 +108,7 @@ const Farm = () => {
           ) : (
             <UnlockWallet />
           )}
-        </Route>
+        </Route>}
         <Route path={`${path}/:bankId`}>
           <BackgroundImage />
           <Bank />

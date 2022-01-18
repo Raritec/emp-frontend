@@ -19,7 +19,9 @@ import useBondsPurchasable from '../../hooks/useBondsPurchasable';
 import {getDisplayBalance} from '../../utils/formatBalance';
 import {BOND_REDEEM_PRICE, BOND_REDEEM_PRICE_BN} from '../../emp-finance/constants';
 
-import HomeImage from '../../assets/img/background.jpg';
+import HomeImage from '../../assets/img/background.png';
+import LaunchCountdown from '../../components/LaunchCountdown';
+import config from '../../config';
 const BackgroundImage = createGlobalStyle`
   body {
     background: url(${HomeImage}) repeat !important;
@@ -36,7 +38,6 @@ const Bond: React.FC = () => {
   const bondStat = useBondStats();
   const empStat = useEmpStats();
   const cashPrice = useCashPriceInLastTWAP();
-  console.log(cashPrice.toString(), BOND_REDEEM_PRICE_BN.toString())
 
   const bondsPurchasable = useBondsPurchasable();
 
@@ -62,12 +63,14 @@ const Bond: React.FC = () => {
   );
   const isBondRedeemable = useMemo(() => cashPrice.gt(BOND_REDEEM_PRICE_BN), [cashPrice]);
   const isBondPurchasable = useMemo(() => Number(bondStat?.tokenInFtm) < 1.01, [bondStat]);
+  const now = Date.now();
 
   return (
     <Switch>
       <Page>
         <BackgroundImage />
-        {!!account ? (
+        {now < config.bondLaunchesAt.getTime() ? <LaunchCountdown deadline={config.bondLaunchesAt} description='Home' descriptionLink='/' />
+        : !!account ? (
           <>
             <Route exact path={path}>
               <PageHeader icon={'🏦'} title="Buy &amp; Redeem Bonds" subtitle="Earn premiums upon redemption" />

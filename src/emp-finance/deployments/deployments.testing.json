@@ -467,7 +467,7 @@
     ]
   },
   "EBond": {
-    "address": "0xcd7144fa76419bb652b902a9788adb44ded39df3",
+    "address": "0x18b6f86b7c51c902c737cb9123e1e4a1b7c01fd4",
     "abi": [
       {
         "inputs": [],
@@ -1613,7 +1613,7 @@
     ]
   },
   "EShareBnbEShareRewardPool": {
-    "address": "0x2a55caac38d338537669acb36234b1b2dedbe266",
+    "address": "0xabcc38a483d6c8ce84202afa22684439ddaa8eeb",
     "abi": [
       {
         "inputs": [
@@ -2099,7 +2099,7 @@
     ]
   },
   "EmpEthEShareRewardPool": {
-    "address": "0x2a55caac38d338537669acb36234b1b2dedbe266",
+    "address": "0xabcc38a483d6c8ce84202afa22684439ddaa8eeb",
     "abi": [
       {
         "inputs": [

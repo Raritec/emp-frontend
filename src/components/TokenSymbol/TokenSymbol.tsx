@@ -1,10 +1,10 @@
 import React from 'react';
 
 //Graveyard ecosystem logos
-import empLogo from '../../assets/img/emp-final.gif';
-import tShareLogo from '../../assets/img/eshares-final.png';
-import empLogoPNG from '../../assets/img/emp-final.gif';
-import tShareLogoPNG from '../../assets/img/eshares-final.png';
+import empLogo from '../../assets/img/emp-final2.gif';
+import tShareLogo from '../../assets/img/eshares-final2.gif';
+import empLogoPNG from '../../assets/img/emp-final2.gif';
+import tShareLogoPNG from '../../assets/img/eshares-final2.gif';
 import tBondLogo from '../../assets/img/emp-bond-final.gif';
 
 import empFtmLpLogo from '../../assets/img/emp-eth-lp.png';

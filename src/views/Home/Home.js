@@ -24,9 +24,9 @@ import {makeStyles} from '@material-ui/core/styles';
 import useEmpFinance from '../../hooks/useEmpFinance';
 import {ReactComponent as IconTelegram} from '../../assets/img/telegram.svg';
 
-import EmpImage from '../../assets/img/emp-final.gif';
+import EmpImage from '../../assets/img/emp_animated.gif';
 
-import HomeImage from '../../assets/img/background.jpg';
+import HomeImage from '../../assets/img/background.png';
 const BackgroundImage = createGlobalStyle`
   body {
     background: url(${HomeImage}) repeat !important;
@@ -71,7 +71,7 @@ const Home = () => {
   }
 
   const buyEmpAddress =
-    'https://pancakeswap.finance/swap?inputCurrency=0x2170ed0880ac9a755fd29b2688956bd959f933f8&outputCurrency=' +
+    'https://pancakeswap.finance/swap?inputCurrency=0x2170Ed0880ac9A755fd29B2688956BD959F933F8&outputCurrency=' +
     emp.address;
   const buyEShareAddress = 
     'https://pancakeswap.finance/swap?outputCurrency=' + 
@@ -162,7 +162,7 @@ const Home = () => {
                 on high risk assets, but with exposure to ETH instead!
               </p>
               <p>
-                <strong>EMP is pegged via algorithm to a 4,000:1 ratio to ETH. $100k ETH = $10 EMP PEG</strong>
+                <strong>EMP is pegged via algorithm to a 4,000:1 ratio to ETH. $40k ETH = $10 EMP PEG</strong>
                 {/* Stake your EMP-ETH LP in the Farm to earn ESHARE rewards. Then stake your earned ESHARE in the
                 Boardroom to earn more EMP! */}
               </p>

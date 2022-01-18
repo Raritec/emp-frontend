@@ -102,14 +102,14 @@ const Nav = () => {
     setOpen(false);
   };
 
-  const btcPriceInDollars = useMemo(() => (empStats ? Number(btcStats).toFixed(2) : null), [empStats]);
+  const btcPriceInDollars = useMemo(() => (btcStats ? Number(btcStats).toFixed(2) : null), [btcStats]);
   const empPriceInDollars = useMemo(
     () => (empStats ? Number(empStats.priceInDollars).toFixed(2) : null),
     [empStats],
   );
   const sharePriceInDollars = useMemo(
-    () => (empStats ? Number(shareStats.priceInDollars).toFixed(2) : null),
-    [empStats],
+    () => (shareStats ? Number(shareStats.priceInDollars).toFixed(2) : null),
+    [shareStats],
   );
 
   return (
@@ -146,7 +146,7 @@ const Nav = () => {
               <Link color="textPrimary" to="/regulations" className={classes.link}>
                 Regulations
               </Link> */}
-              <a href="https://docs.emp.money" className={'navLink ' + classes.link} rel="noopener" target="_blank">
+              <a href="https://docs.emp.money/documents" className={'navLink ' + classes.link} rel="noopener" target="_blank">
                 Docs
               </a>
             </Box>

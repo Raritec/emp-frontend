@@ -1,6 +1,5 @@
 import {useEffect, useState} from 'react';
 import useEmpFinance from './useEmpFinance';
-import {TokenStat} from '../emp-finance/types';
 import useRefresh from './useRefresh';
 
 const useEthStats = () => {

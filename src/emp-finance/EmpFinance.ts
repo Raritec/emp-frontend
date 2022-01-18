@@ -111,7 +111,7 @@ export class EmpFinance {
 
     return {
       //  tokenInFtm: (Number(priceInBNB) * 100).toString(),
-      tokenInFtm: priceInETH.toString(),
+      tokenInFtm: priceInETH ? priceInETH.toString() : '0',
       priceInDollars: priceOfEmpInDollars,
       totalSupply: getDisplayBalance(supply, this.EMP.decimal, 0),
       circulatingSupply: getDisplayBalance(empCirculatingSupply, this.EMP.decimal, 0),
@@ -311,6 +311,9 @@ export class EmpFinance {
     poolContract: Contract,
     depositTokenName: string,
   ) {
+    if (contractName.endsWith('GenesisRewardPool')) {
+      return await poolContract.empPerSecond();
+    }
     if (earnTokenName === 'EMP') {
       if (!contractName.endsWith('EmpRewardPool')) {
         const rewardPerSecond = await poolContract.tSharePerSecond();
@@ -335,9 +338,9 @@ export class EmpFinance {
     }
     const rewardPerSecond = await poolContract.tSharePerSecond();
     if (depositTokenName.startsWith('EMP')) {
-      return rewardPerSecond.mul(35500).div(59500);
+      return rewardPerSecond.mul(11900).div(23800);
     } else {
-      return rewardPerSecond.mul(24000).div(59500);
+      return rewardPerSecond.mul(11900).div(23800);
     }
   }
 
