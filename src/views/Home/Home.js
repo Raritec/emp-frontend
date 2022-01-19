@@ -12,7 +12,6 @@ import useZap from '../../hooks/useZap';
 import useBondStats from '../../hooks/useBondStats';
 import useeShareStats from '../../hooks/useeShareStats';
 import useTotalValueLocked from '../../hooks/useTotalValueLocked';
-import {Emp as empTesting, EShare as eShareTesting} from '../../emp-finance/deployments/deployments.testing.json';
 import {Emp as empProd, EShare as eShareProd} from '../../emp-finance/deployments/deployments.mainnet.json';
 import {roundAndFormatNumber} from '../../0x';
 import MetamaskFox from '../../assets/img/metamask-fox.svg';
@@ -60,15 +59,8 @@ const Home = () => {
   const tBondStats = useBondStats();
   const empFinance = useEmpFinance();
 
-  let emp;
-  let eShare;
-  if (!process.env.NODE_ENV || process.env.NODE_ENV === 'development') {
-    emp = empTesting;
-    eShare = eShareTesting;
-  } else {
-    emp = empProd;
-    eShare = eShareProd;
-  }
+  const emp = empProd;
+  const eShare = eShareProd;
 
   const buyEmpAddress =
     'https://pancakeswap.finance/swap?inputCurrency=0x2170Ed0880ac9A755fd29B2688956BD959F933F8&outputCurrency=' +

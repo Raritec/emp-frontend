@@ -113,17 +113,17 @@ export const bankDefinitions: {[contractName: string]: BankInfo} = {
 
 
 
-  // EmpETHLPEmpRewardPool: {
-  //   name: 'Earn EMP by EMP-ETH LP',
-  //   poolId: 0,
-  //   sectionInUI: 1,
-  //   contract: 'EmpRewardPool',
-  //   depositTokenName: 'EMP-ETH-LP',
-  //   earnTokenName: 'EMP',
-  //   finished: false,
-  //   sort: 2,
-  //   closedForStaking: false,
-  // },
+  EmpETHLPEmpRewardPool: {
+    name: 'Earn EMP by EMP-ETH LP',
+    poolId: 0,
+    sectionInUI: 1,
+    contract: 'EmpRewardPool',
+    depositTokenName: 'EMP-ETH-LP',
+    earnTokenName: 'EMP',
+    finished: false,
+    sort: 2,
+    closedForStaking: false,
+  },
 
 
   
