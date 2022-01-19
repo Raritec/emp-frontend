@@ -380,7 +380,7 @@ const Home = () => {
               </Box>
               <h2>ESHARE-BNB PancakeSwap LP</h2>
               <Box mt={2}>
-                <Button onClick={onPresentEshareZap} className="shinyButtonSecondary">
+                <Button disabled onClick={onPresentEshareZap} className="shinyButtonDisabledSecondary">
                   Zap In
                 </Button>
               </Box>

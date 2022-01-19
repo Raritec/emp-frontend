@@ -52,17 +52,17 @@ const Footer = () => {
           </Grid>
           <Grid item xs={6} style={{textAlign: 'right', height: '20px'}}>
             <a
-              href="https://twitter.com/EmpMoneyBSC"
+              href="https://twitter.com/empmoneyeth"
               rel="noopener noreferrer"
               target="_blank"
               className={classes.link}
             >
               <IconTwitter style={{fill: '#dddfee'}} />
             </a>
-            <a href="https://github.com/empmoney" rel="noopener noreferrer" target="_blank" className={classes.link}>
+            <a href="https://github.com/DrManhattan115" rel="noopener noreferrer" target="_blank" className={classes.link}>
               <IconGithub style={{fill: '#dddfee', height: '20px'}} />
             </a>
-            <a href="https://t.me/empmoneybsc" rel="noopener noreferrer" target="_blank" className={classes.link}>
+            <a href="https://t.me/empmoney" rel="noopener noreferrer" target="_blank" className={classes.link}>
               <IconTelegram style={{fill: '#dddfee', height: '20px'}} />
             </a>
             <a href="http://discord.emp.money/" rel="noopener noreferrer" target="_blank" className={classes.link}>
