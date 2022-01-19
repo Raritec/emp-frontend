@@ -150,8 +150,7 @@ const Home = () => {
             <Box p={4} style={{textAlign: 'center'}}>
               <h2>Welcome to Emp</h2>
               <p>
-                EMP is an algocoin which is designed to follow the price of ETH. Enjoy high yields normally only found
-                on high risk assets, but with exposure to ETH instead!
+              The algocoin that follows Ethereum's price! Now you can have high yields normally only found on risky assets, but with exposure to the world’s favorite cryptocurrency instead.
               </p>
               <p>
                 <strong>EMP is pegged via algorithm to a 4,000:1 ratio to ETH. $40k ETH = $10 EMP PEG</strong>
@@ -219,9 +218,17 @@ const Home = () => {
                 target="_blank"
                 href={buyEShareAddress}
                 className={'shinyButton ' + classes.button}
-                style={{marginLeft: '10px'}}
+                style={{margin: '10px'}}
               >
                 Buy ESHARE
+              </Button>
+              <Button
+                target="_blank"
+                href="https://www.youtube.com/watch?v=rqzoyNXcRsA"
+                className={'shinyButton ' + classes.button}
+                style={{marginLeft: '10px'}}
+              >
+                Tutorial
               </Button>
             </CardContent>
           </Card>

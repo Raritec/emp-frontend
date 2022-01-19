@@ -255,7 +255,7 @@ export const bankDefinitions: {[contractName: string]: BankInfo} = {
 
   EShareBnbEShareRewardPool: {
     name: 'Earn ESHARE by ESHARE-BNB LP',
-    poolId: 0,
+    poolId: 2,
     sectionInUI: 2,
     contract: 'EShareBnbEShareRewardPool',
     depositTokenName: 'ESHARE-BNB-LP',
@@ -266,7 +266,7 @@ export const bankDefinitions: {[contractName: string]: BankInfo} = {
   },
   EmpEthEShareRewardPool: {
     name: 'Earn ESHARE by EMP-ETH LP',
-    poolId: 1,
+    poolId: 3,
     sectionInUI: 2,
     contract: 'EmpEthEShareRewardPool',
     depositTokenName: 'EMP-ETH-LP',
