@@ -31,7 +31,7 @@ const Farm = () => {
   const [banks] = useBanks();
   const {path} = useRouteMatch();
   const {account} = useWallet();
-  const esharesActive = Date.now() >= config.boardroomLaunchesAt.getTime();
+  const esharesActive = Date.now() >= config.esharesLaunchesAt.getTime();
   const activeBanks = banks.filter((bank) => !bank.finished && (esharesActive || bank.sectionInUI !== 2));
 
   return (
@@ -113,7 +113,7 @@ const Farm = () => {
           <BackgroundImage />
           <Bank />
         </Route>
-        {!!account && !esharesActive && <div style={{marginTop: '2rem'}}><LaunchCountdown deadline={config.boardroomLaunchesAt} description='ESHARE Farms'/></div>}
+        {!!account && !esharesActive && <div style={{marginTop: '2rem'}}><LaunchCountdown deadline={config.esharesLaunchesAt} description='ESHARE Farms'/></div>}
       </Page>
     </Switch>
   );

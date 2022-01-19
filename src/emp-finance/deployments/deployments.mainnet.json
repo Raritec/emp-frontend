@@ -4045,7 +4045,7 @@
     ]
   },
   "Boardroom": {
-    "address": "0x61226b4945d8DfAD43df48BbdbCc7cBf4B02C743",
+    "address": "0xD90a4D22a3B406A7e9f59d2c295C2D8554CD88B0",
     "abi": [
       {
         "anonymous": false,
@@ -10514,7 +10514,7 @@
     ]
   },
   "Oracle": {
-    "address": "0x73c17a4e31720c5ADb7701d55Dd48fBf0E335590",
+    "address": "0xc8a48dbb253924dc1b2339616b004ca7c069543a",
     "abi": [
       {
         "inputs": [
@@ -11138,7 +11138,7 @@
     ]
   },
   "Treasury": {
-    "address": "0x0357b4Fe87e0b9b96FF9aedc4a82E675cA530CAD",
+    "address": "0xA605b764Bc0C34Dc45dCF89e6225FF0492978F13",
     "abi": [
       {
         "anonymous": false,

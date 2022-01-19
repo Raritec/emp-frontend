@@ -50,7 +50,8 @@ const configurations: {[env: string]: Configuration} = {
     },
     baseLaunchDate: new Date('2022-01-17T23:00:00Z'),
     bondLaunchesAt: new Date('2022-01-31T23:00:00Z'),
-    boardroomLaunchesAt: new Date('2022-01-20T01:00:00Z'),
+    boardroomLaunchesAt: new Date('2022-01-20T13:00:00Z'),
+    esharesLaunchesAt: new Date('2022-01-20T01:00:00Z'),
     refreshInterval: 10000,
   },
   production: {
@@ -79,7 +80,8 @@ const configurations: {[env: string]: Configuration} = {
     },
     baseLaunchDate: new Date('2022-01-17T23:00:00Z'),
     bondLaunchesAt: new Date('2022-01-31T23:00:00Z'),
-    boardroomLaunchesAt: new Date('2022-01-20T01:00:00Z'),
+    boardroomLaunchesAt: new Date('2022-01-20T13:00:00Z'),
+    esharesLaunchesAt: new Date('2022-01-20T01:00:00Z'),
     refreshInterval: 10000,
   },
 };

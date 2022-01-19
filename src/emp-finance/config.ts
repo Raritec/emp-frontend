@@ -13,6 +13,7 @@ export type Configuration = {
   baseLaunchDate: Date;
   bondLaunchesAt: Date;
   boardroomLaunchesAt: Date;
+  esharesLaunchesAt: Date;
 
   refreshInterval: number;
 };
