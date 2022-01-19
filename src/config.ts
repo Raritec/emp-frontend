@@ -50,7 +50,7 @@ const configurations: {[env: string]: Configuration} = {
     },
     baseLaunchDate: new Date('2022-01-17T23:00:00Z'),
     bondLaunchesAt: new Date('2022-01-31T23:00:00Z'),
-    boardroomLaunchesAt: new Date('2022-01-17T00:00:00Z'),
+    boardroomLaunchesAt: new Date('2022-01-20T01:00:00Z'),
     refreshInterval: 10000,
   },
   production: {
@@ -79,7 +79,7 @@ const configurations: {[env: string]: Configuration} = {
     },
     baseLaunchDate: new Date('2022-01-17T23:00:00Z'),
     bondLaunchesAt: new Date('2022-01-31T23:00:00Z'),
-    boardroomLaunchesAt: new Date('2022-01-17T00:00:00Z'),
+    boardroomLaunchesAt: new Date('2022-01-20T01:00:00Z'),
     refreshInterval: 10000,
   },
 };
@@ -253,28 +253,28 @@ export const bankDefinitions: {[contractName: string]: BankInfo} = {
 
 
 
-  // EShareBnbEShareRewardPool: {
-  //   name: 'Earn ESHARE by ESHARE-BNB LP',
-  //   poolId: 0,
-  //   sectionInUI: 2,
-  //   contract: 'EShareBnbEShareRewardPool',
-  //   depositTokenName: 'ESHARE-BNB-LP',
-  //   earnTokenName: 'ESHARE',
-  //   finished: false,
-  //   sort: 7,
-  //   closedForStaking: false,
-  // },
-  // EmpEthEShareRewardPool: {
-  //   name: 'Earn ESHARE by EMP-ETH LP',
-  //   poolId: 1,
-  //   sectionInUI: 2,
-  //   contract: 'EmpEthEShareRewardPool',
-  //   depositTokenName: 'EMP-ETH-LP',
-  //   earnTokenName: 'ESHARE',
-  //   finished: false,
-  //   sort: 8,
-  //   closedForStaking: false,
-  // },
+  EShareBnbEShareRewardPool: {
+    name: 'Earn ESHARE by ESHARE-BNB LP',
+    poolId: 0,
+    sectionInUI: 2,
+    contract: 'EShareBnbEShareRewardPool',
+    depositTokenName: 'ESHARE-BNB-LP',
+    earnTokenName: 'ESHARE',
+    finished: false,
+    sort: 7,
+    closedForStaking: false,
+  },
+  EmpEthEShareRewardPool: {
+    name: 'Earn ESHARE by EMP-ETH LP',
+    poolId: 1,
+    sectionInUI: 2,
+    contract: 'EmpEthEShareRewardPool',
+    depositTokenName: 'EMP-ETH-LP',
+    earnTokenName: 'ESHARE',
+    finished: false,
+    sort: 8,
+    closedForStaking: false,
+  },
 
 
 

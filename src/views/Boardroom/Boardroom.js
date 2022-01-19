@@ -6,6 +6,7 @@ import Spacer from '../../components/Spacer';
 import Harvest from './components/Harvest';
 import Stake from './components/Stake';
 import {makeStyles} from '@material-ui/core/styles';
+import config from '../../config';
 
 import {Box, Card, CardContent, Button, Typography, Grid} from '@material-ui/core';
 
@@ -29,6 +30,7 @@ import ProgressCountdown from './components/ProgressCountdown';
 import {createGlobalStyle} from 'styled-components';
 
 import HomeImage from '../../assets/img/background.png';
+import LaunchCountdown from '../../components/LaunchCountdown';
 const BackgroundImage = createGlobalStyle`
   body {
     background: url(${HomeImage}) repeat !important;
@@ -59,12 +61,14 @@ const Boardroom = () => {
   const canWithdraw = useWithdrawCheck();
   const scalingFactor = useMemo(() => (cashStat ? Number(cashStat.priceInDollars).toFixed(4) : null), [cashStat]);
   const {to} = useTreasuryAllocationTimes();
+  const esharesActive = Date.now() >= config.boardroomLaunchesAt.getTime();
 
   return (
     <Page>
       <BackgroundImage />
       {!!account ? (
-        <>
+        !esharesActive ? <LaunchCountdown deadline={config.boardroomLaunchesAt} description='Home' descriptionLink='/' />
+        : <>
           <Typography color="textPrimary" align="center" variant="h3" gutterBottom>
             Boardroom
           </Typography>

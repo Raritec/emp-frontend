@@ -31,13 +31,13 @@ const Farm = () => {
   const [banks] = useBanks();
   const {path} = useRouteMatch();
   const {account} = useWallet();
-  const activeBanks = banks.filter((bank) => !bank.finished);
-  const now = Date.now();
+  const esharesActive = Date.now() >= config.boardroomLaunchesAt.getTime();
+  const activeBanks = banks.filter((bank) => !bank.finished && (esharesActive || bank.sectionInUI !== 2));
+
   return (
     <Switch>
       <Page>
-        {now < config.baseLaunchDate.getTime() ? <LaunchCountdown deadline={config.baseLaunchDate} description='Home' descriptionLink='/' />
-         : <Route exact path={path}>
+         <Route exact path={path}>
           <BackgroundImage />
           {!!account ? (
             <Container maxWidth="lg">
@@ -108,11 +108,12 @@ const Farm = () => {
           ) : (
             <UnlockWallet />
           )}
-        </Route>}
+        </Route>
         <Route path={`${path}/:bankId`}>
           <BackgroundImage />
           <Bank />
         </Route>
+        {!!account && !esharesActive && <div style={{marginTop: '2rem'}}><LaunchCountdown deadline={config.boardroomLaunchesAt} description='ESHARE Farms'/></div>}
       </Page>
     </Switch>
   );
