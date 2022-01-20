@@ -100,12 +100,15 @@ export class EmpFinance {
     const supply = await this.EMP.totalSupply();
     const empRewardPoolSupply = await this.EMP.balanceOf(EmpGenesisRewardPool.address);
     const empRewardPoolSupply2 = await this.EMP.balanceOf(EmpRewardPool.address);
-    const empCirculatingSupply = supply.sub(empRewardPoolSupply).sub(empRewardPoolSupply2);
-    const priceInBNB = await this.getTokenPriceFromPancakeswap(this.EMP);
+    const oldTreasurySupply = await this.EMP.balanceOf('0xA605b764Bc0C34Dc45dCF89e6225FF0492978F13');
+    const oldBoardroomSupply = await this.EMP.balanceOf('0xD90a4D22a3B406A7e9f59d2c295C2D8554CD88B0');
+    const burnSupply = await this.EMP.balanceOf('0x0000000000000000000000000000000000000000');
+    const empCirculatingSupply = supply.sub(empRewardPoolSupply).sub(empRewardPoolSupply2).sub(oldTreasurySupply).sub(oldBoardroomSupply).sub(burnSupply);
+    // const priceInBNB = await this.getTokenPriceFromPancakeswap(this.EMP);
     const priceInETH = await this.getTokenPriceFromPancakeswapETH(this.EMP);
-    const priceOfOneBNB = await this.getWBNBPriceFromPancakeswap();
+    // const priceOfOneBNB = await this.getWBNBPriceFromPancakeswap();
     const priceOfOneETH = await this.getETHPriceFromPancakeswap();
-    const priceInDollars = await this.getTokenPriceFromPancakeswapEMPUSD();
+    // const priceInDollars = await this.getTokenPriceFromPancakeswapEMPUSD();
     const priceOfEmpInDollars = ((Number(priceInETH) * Number(priceOfOneETH)) / 4000).toFixed(2);
     //console.log('priceOfEmpInDollars', priceOfEmpInDollars);
 

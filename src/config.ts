@@ -50,7 +50,7 @@ const configurations: {[env: string]: Configuration} = {
     },
     baseLaunchDate: new Date('2022-01-17T23:00:00Z'),
     bondLaunchesAt: new Date('2022-01-31T23:00:00Z'),
-    boardroomLaunchesAt: new Date('2022-01-20T13:00:00Z'),
+    boardroomLaunchesAt: new Date('2022-01-21T01:00:00Z'),
     esharesLaunchesAt: new Date('2022-01-20T01:00:00Z'),
     refreshInterval: 10000,
   },
@@ -80,7 +80,7 @@ const configurations: {[env: string]: Configuration} = {
     },
     baseLaunchDate: new Date('2022-01-17T23:00:00Z'),
     bondLaunchesAt: new Date('2022-01-31T23:00:00Z'),
-    boardroomLaunchesAt: new Date('2022-01-20T13:00:00Z'),
+    boardroomLaunchesAt: new Date('2022-01-21T01:00:00Z'),
     esharesLaunchesAt: new Date('2022-01-20T01:00:00Z'),
     refreshInterval: 10000,
   },
@@ -124,7 +124,7 @@ export const bankDefinitions: {[contractName: string]: BankInfo} = {
     earnTokenName: 'EMP',
     finished: false,
     sort: 2,
-    closedForStaking: false,
+    closedForStaking: true,
   },
 
 
@@ -257,7 +257,7 @@ export const bankDefinitions: {[contractName: string]: BankInfo} = {
 
   EShareBnbEShareRewardPool: {
     name: 'Earn ESHARE by ESHARE-BNB LP',
-    poolId: 2,
+    poolId: 0,
     sectionInUI: 2,
     contract: 'EShareBnbEShareRewardPool',
     depositTokenName: 'ESHARE-BNB-LP',
@@ -268,7 +268,7 @@ export const bankDefinitions: {[contractName: string]: BankInfo} = {
   },
   EmpEthEShareRewardPool: {
     name: 'Earn ESHARE by EMP-ETH LP',
-    poolId: 3,
+    poolId: 1,
     sectionInUI: 2,
     contract: 'EmpEthEShareRewardPool',
     depositTokenName: 'EMP-ETH-LP',

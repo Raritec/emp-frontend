@@ -10,7 +10,6 @@ import {Alert} from '@material-ui/lab';
 import UnlockWallet from '../../components/UnlockWallet';
 import Page from '../../components/Page';
 import FarmCard from './FarmCard';
-import FarmImage from '../../assets/img/farm.png';
 import {createGlobalStyle} from 'styled-components';
 
 import useBanks from '../../hooks/useBanks';
@@ -31,7 +30,7 @@ const Farm = () => {
   const [banks] = useBanks();
   const {path} = useRouteMatch();
   const {account} = useWallet();
-  const esharesActive = Date.now() >= config.esharesLaunchesAt.getTime();
+  const esharesActive = true // Date.now() >= config.esharesLaunchesAt.getTime();
   const activeBanks = banks.filter((bank) => !bank.finished && (esharesActive || bank.sectionInUI !== 2));
 
   return (
@@ -72,9 +71,9 @@ const Farm = () => {
                   <Typography color="textPrimary" align="center" variant="h4" gutterBottom style={{marginTop: '20px'}}>
                   Earn EMP by staking PancakeSwap LP
                   </Typography>
-                  {/* <Alert variant="filled" severity="warning">
+                  <Alert variant="filled" severity="warning">
                     Please remove funds from all farms which are not active.
-                  </Alert> */}
+                  </Alert>
                   <Grid container spacing={3} style={{marginTop: '20px', display: 'flex', alignItems: 'center'}}>
                     {activeBanks
                       .filter((bank) => bank.sectionInUI === 1)
