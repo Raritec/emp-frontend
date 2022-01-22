@@ -3,7 +3,7 @@ import useEmpFinance from './useEmpFinance';
 import {TokenStat} from '../emp-finance/types';
 import useRefresh from './useRefresh';
 
-const useBondStats = () => {
+const useBondStats = (version: number) => {
   const [stat, setStat] = useState<TokenStat>();
   const {slowRefresh} = useRefresh();
   const empFinance = useEmpFinance();
@@ -11,13 +11,13 @@ const useBondStats = () => {
   useEffect(() => {
     async function fetchBondPrice() {
       try {
-        setStat(await empFinance.getBondStat());
+        setStat(await empFinance.getBondStat(version));
       } catch (err) {
         console.error(err);
       }
     }
     fetchBondPrice();
-  }, [setStat, empFinance, slowRefresh]);
+  }, [setStat, empFinance, slowRefresh, version]);
 
   return stat;
 };

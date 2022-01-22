@@ -48,13 +48,13 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const Boardroom = () => {
-  const version = 0;
+const BoardroomV2 = () => {
+  const version = 1;
   const classes = useStyles();
   const {account} = useWallet();
   const {onRedeem} = useRedeemOnBoardroom(version);
   const stakedBalance = useStakedBalanceOnBoardroom(version);
-  const currentEpoch = useCurrentEpoch(version);
+  const currentEpoch = useCurrentEpoch(version).add(8);
   const cashStat = useCashPriceInEstimatedTWAP(version);
   const totalStaked = useTotalStakedOnBoardroom(version);
   const boardroomAPR = useFetchBoardroomAPR(version);
@@ -73,16 +73,13 @@ const Boardroom = () => {
           <Typography color="textPrimary" align="center" variant="h3" gutterBottom>
             Boardroom
           </Typography>
-          <Alert variant="standard" severity="warning" style={{margin: '20px 8.5%' }}>
-          Please Migrate Funds To <a href='/boardroomV2'><b>BoardroomV2</b></a>. Rewards Stop After <b>Epoch #7</b>
-          </Alert>
           <Box mt={5}>
             <Grid container justify="center" spacing={3}>
               <Grid item xs={12} md={2} lg={2} className={classes.gridItem}>
                 <Card className={classes.gridItem}>
                   <CardContent style={{textAlign: 'center'}}>
                     <Typography style={{textTransform: 'uppercase', color: '#155aca'}}>Next Epoch</Typography>
-                    <ProgressCountdown base={moment().toDate()} hideBar={true} deadline={moment().toDate()} description="Next Epoch" />
+                    <ProgressCountdown base={moment().toDate()} hideBar={true} deadline={to} description="Next Epoch" />
                   </CardContent>
                 </Card>
               </Grid>
@@ -111,7 +108,7 @@ const Boardroom = () => {
                 <Card className={classes.gridItem}>
                   <CardContent align="center">
                     <Typography style={{textTransform: 'uppercase', color: '#155aca'}}>APR</Typography>
-                    <Typography>{0}%</Typography>
+                    <Typography>{boardroomAPR > 1 ? boardroomAPR.toFixed(2) : 'TBD'}%</Typography>
                   </CardContent>
                 </Card>
               </Grid>
@@ -232,4 +229,4 @@ const StyledCardWrapper = styled.div`
   }
 `;
 
-export default Boardroom;
+export default BoardroomV2;

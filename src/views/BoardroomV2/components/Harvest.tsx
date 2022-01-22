@@ -16,7 +16,7 @@ import useEmpStats from '../../../hooks/useEmpStats';
 import {getDisplayBalance} from '../../../utils/formatBalance';
 
 const Harvest: React.FC = () => {
-  const version = 0;
+  const version = 1;
   const empStats = useEmpStats();
   const {onReward} = useHarvestFromBoardroom(version);
   const earnings = useEarningsOnBoardroom(version);
@@ -61,10 +61,9 @@ const Harvest: React.FC = () => {
           ''
         ) : (
           <Card>
-            <CardContent style={{textAlign: 'center'}}>
-              <Typography>Claim possible in</Typography>
+            <CardContent>
+              <Typography style={{textAlign: 'center'}}>Claim possible in</Typography>
               <ProgressCountdown hideBar={true} base={from} deadline={to} description="Claim available in" />
-              <Label text={'Manually unlocked after epoch #7'} variant="yellow" />
             </CardContent>
           </Card>
         )}

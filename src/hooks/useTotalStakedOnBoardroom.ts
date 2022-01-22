@@ -3,7 +3,7 @@ import {BigNumber} from 'ethers';
 import useEmpFinance from './useEmpFinance';
 import useRefresh from './useRefresh';
 
-const useTotalStakedOnBoardroom = () => {
+const useTotalStakedOnBoardroom = (version: number) => {
   const [totalStaked, setTotalStaked] = useState(BigNumber.from(0));
   const empFinance = useEmpFinance();
   const {slowRefresh} = useRefresh();
@@ -12,7 +12,7 @@ const useTotalStakedOnBoardroom = () => {
   useEffect(() => {
     async function fetchTotalStaked() {
       try {
-        setTotalStaked(await empFinance.getTotalStakedInBoardroom());
+        setTotalStaked(await empFinance.getTotalStakedInBoardroom(version));
       } catch (err) {
         console.error(err);
       }
@@ -20,7 +20,7 @@ const useTotalStakedOnBoardroom = () => {
     if (isUnlocked) {
       fetchTotalStaked();
     }
-  }, [isUnlocked, slowRefresh, empFinance]);
+  }, [isUnlocked, slowRefresh, empFinance, version]);
 
   return totalStaked;
 };

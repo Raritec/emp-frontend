@@ -3,7 +3,7 @@ import useEmpFinance from './useEmpFinance';
 import {AllocationTime} from '../emp-finance/types';
 import useRefresh from './useRefresh';
 
-const useTreasuryAllocationTimes = () => {
+const useTreasuryAllocationTimes = (version: number) => {
   const {slowRefresh} = useRefresh();
   const [time, setTime] = useState<AllocationTime>({
     from: new Date(),
@@ -12,9 +12,9 @@ const useTreasuryAllocationTimes = () => {
   const empFinance = useEmpFinance();
   useEffect(() => {
     if (empFinance) {
-      empFinance.getTreasuryNextAllocationTime().then(setTime);
+      empFinance.getTreasuryNextAllocationTime(version).then(setTime);
     }
-  }, [empFinance, slowRefresh]);
+  }, [empFinance, slowRefresh, version]);
   return time;
 };
 

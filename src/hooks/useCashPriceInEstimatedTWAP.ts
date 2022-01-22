@@ -3,7 +3,7 @@ import useEmpFinance from './useEmpFinance';
 import {TokenStat} from '../emp-finance/types';
 import useRefresh from './useRefresh';
 
-const useCashPriceInEstimatedTWAP = () => {
+const useCashPriceInEstimatedTWAP = (version: number) => {
   const [stat, setStat] = useState<TokenStat>();
   const empFinance = useEmpFinance();
   const {slowRefresh} = useRefresh();
@@ -11,13 +11,13 @@ const useCashPriceInEstimatedTWAP = () => {
   useEffect(() => {
     async function fetchCashPrice() {
       try {
-        setStat(await empFinance.getEmpStatInEstimatedTWAP());
+        setStat(await empFinance.getEmpStatInEstimatedTWAP(version));
       } catch (err) {
         console.error(err);
       }
     }
     fetchCashPrice();
-  }, [setStat, empFinance, slowRefresh]);
+  }, [setStat, empFinance, slowRefresh, version]);
 
   return stat;
 };

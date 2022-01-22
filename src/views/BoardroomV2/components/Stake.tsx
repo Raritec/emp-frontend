@@ -31,9 +31,9 @@ import useStakeToBoardroom from '../../../hooks/useStakeToBoardroom';
 import useWithdrawFromBoardroom from '../../../hooks/useWithdrawFromBoardroom';
 
 const Stake: React.FC = () => {
-  const version = 0;
   const empFinance = useEmpFinance();
-  const [approveStatus, approve] = useApprove(empFinance.ESHARE, empFinance.contracts.Boardroom.address);
+  const version = 1;
+  const [approveStatus, approve] = useApprove(empFinance.ESHARE, empFinance.contracts.BoardroomV2.address);
 
   const tokenBalance = useTokenBalance(empFinance.ESHARE);
   const stakedBalance = useStakedBalanceOnBoardroom(version);
@@ -118,10 +118,9 @@ const Stake: React.FC = () => {
           ''
         ) : (
           <Card>
-            <CardContent style={{textAlign: 'center'}}>
-              <Typography>Withdraw possible in</Typography>
+            <CardContent>
+              <Typography style={{textAlign: 'center'}}>Withdraw possible in</Typography>
               <ProgressCountdown hideBar={true} base={from} deadline={to} description="Withdraw available in" />
-              <Label text={'Manually unlocked after epoch #7'} variant="yellow" />
             </CardContent>
           </Card>
         )}

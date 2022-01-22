@@ -3,7 +3,7 @@ import {BigNumber} from 'ethers';
 import useEmpFinance from './useEmpFinance';
 import useRefresh from './useRefresh';
 
-const useStakedBalanceOnBoardroom = () => {
+const useStakedBalanceOnBoardroom = (version: number) => {
   const {slowRefresh} = useRefresh();
   const [balance, setBalance] = useState(BigNumber.from(0));
   const empFinance = useEmpFinance();
@@ -11,7 +11,7 @@ const useStakedBalanceOnBoardroom = () => {
   useEffect(() => {
     async function fetchBalance() {
       try {
-        setBalance(await empFinance.getStakedSharesOnBoardroom());
+        setBalance(await empFinance.getStakedSharesOnBoardroom(version));
       } catch (e) {
         console.error(e);
       }
@@ -19,7 +19,7 @@ const useStakedBalanceOnBoardroom = () => {
     if (isUnlocked) {
       fetchBalance();
     }
-  }, [slowRefresh, isUnlocked, empFinance]);
+  }, [slowRefresh, isUnlocked, empFinance, version]);
   return balance;
 };
 

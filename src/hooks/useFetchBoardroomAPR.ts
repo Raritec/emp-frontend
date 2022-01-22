@@ -2,7 +2,7 @@ import {useEffect, useState} from 'react';
 import useEmpFinance from './useEmpFinance';
 import useRefresh from './useRefresh';
 
-const useFetchBoardroomAPR = () => {
+const useFetchBoardroomAPR = (version: number) => {
   const [apr, setApr] = useState<number>(0);
   const empFinance = useEmpFinance();
   const {slowRefresh} = useRefresh();
@@ -10,13 +10,13 @@ const useFetchBoardroomAPR = () => {
   useEffect(() => {
     async function fetchBoardroomAPR() {
       try {
-        setApr(await empFinance.getBoardroomAPR());
+        setApr(await empFinance.getBoardroomAPR(version));
       } catch (err) {
         console.error(err);
       }
     }
     fetchBoardroomAPR();
-  }, [setApr, empFinance, slowRefresh]);
+  }, [setApr, empFinance, slowRefresh, version]);
 
   return apr;
 };

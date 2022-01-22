@@ -2,7 +2,7 @@ import {useEffect, useState} from 'react';
 import useEmpFinance from '../useEmpFinance';
 import {AllocationTime} from '../../emp-finance/types';
 
-const useClaimRewardTimerBoardroom = () => {
+const useClaimRewardTimerBoardroom = (version: number) => {
   const [time, setTime] = useState<AllocationTime>({
     from: new Date(),
     to: new Date(),
@@ -11,9 +11,9 @@ const useClaimRewardTimerBoardroom = () => {
 
   useEffect(() => {
     if (empFinance) {
-      empFinance.getUserClaimRewardTime().then(setTime);
+      empFinance.getUserClaimRewardTime(version).then(setTime);
     }
-  }, [empFinance]);
+  }, [empFinance, version]);
   return time;
 };
 

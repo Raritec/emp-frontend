@@ -3,7 +3,7 @@ import {BigNumber} from 'ethers';
 import useEmpFinance from './useEmpFinance';
 import useRefresh from './useRefresh';
 
-const useEarningsOnBoardroom = () => {
+const useEarningsOnBoardroom = (version: number) => {
   const {slowRefresh} = useRefresh();
   const [balance, setBalance] = useState(BigNumber.from(0));
   const empFinance = useEmpFinance();
@@ -12,7 +12,7 @@ const useEarningsOnBoardroom = () => {
   useEffect(() => {
     async function fetchBalance() {
       try {
-        setBalance(await empFinance.getEarningsOnBoardroom());
+        setBalance(await empFinance.getEarningsOnBoardroom(version));
       } catch (e) {
         console.error(e);
       }

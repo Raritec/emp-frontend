@@ -2,7 +2,7 @@ import {useEffect, useState} from 'react';
 import useEmpFinance from '../useEmpFinance';
 import useRefresh from '../useRefresh';
 
-const useWithdrawCheck = () => {
+const useWithdrawCheck = (version: number) => {
   const [canWithdraw, setCanWithdraw] = useState(false);
   const empFinance = useEmpFinance();
   const {slowRefresh} = useRefresh();
@@ -11,7 +11,7 @@ const useWithdrawCheck = () => {
   useEffect(() => {
     async function canUserWithdraw() {
       try {
-        setCanWithdraw(await empFinance.canUserUnstakeFromBoardroom());
+        setCanWithdraw(await empFinance.canUserUnstakeFromBoardroom(version));
       } catch (err) {
         console.error(err);
       }
@@ -19,7 +19,7 @@ const useWithdrawCheck = () => {
     if (isUnlocked) {
       canUserWithdraw();
     }
-  }, [isUnlocked, empFinance, slowRefresh]);
+  }, [isUnlocked, empFinance, slowRefresh, version]);
 
   return canWithdraw;
 };

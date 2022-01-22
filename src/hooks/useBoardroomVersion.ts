@@ -2,10 +2,10 @@ import {useCallback, useEffect, useState} from 'react';
 import useEmpFinance from './useEmpFinance';
 import useStakedBalanceOnBoardroom from './useStakedBalanceOnBoardroom';
 
-const useBoardroomVersion = () => {
+const useBoardroomVersion = (version: number) => {
   const [boardroomVersion, setBoardroomVersion] = useState('latest');
   const empFinance = useEmpFinance();
-  const stakedBalance = useStakedBalanceOnBoardroom();
+  const stakedBalance = useStakedBalanceOnBoardroom(version);
 
   const updateState = useCallback(async () => {
     setBoardroomVersion(await empFinance.fetchBoardroomVersionOfUser());

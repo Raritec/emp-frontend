@@ -97,12 +97,15 @@ export class EmpFinance {
 
   async getEmpStat(): Promise<TokenStat> {
     const {EmpRewardPool, EmpGenesisRewardPool} = this.contracts;
-    const supply = await this.EMP.totalSupply();
-    const empRewardPoolSupply = await this.EMP.balanceOf(EmpGenesisRewardPool.address);
-    const empRewardPoolSupply2 = await this.EMP.balanceOf(EmpRewardPool.address);
-    const oldTreasurySupply = await this.EMP.balanceOf('0xA605b764Bc0C34Dc45dCF89e6225FF0492978F13');
-    const oldBoardroomSupply = await this.EMP.balanceOf('0xD90a4D22a3B406A7e9f59d2c295C2D8554CD88B0');
-    const burnSupply = await this.EMP.balanceOf('0x0000000000000000000000000000000000000000');
+    const [supply, empRewardPoolSupply, empRewardPoolSupply2, oldTreasurySupply, oldBoardroomSupply, burnSupply] = await Promise.all([
+      this.EMP.totalSupply(),
+      this.EMP.balanceOf(EmpGenesisRewardPool.address),
+      this.EMP.balanceOf(EmpRewardPool.address),
+      this.EMP.balanceOf('0xA605b764Bc0C34Dc45dCF89e6225FF0492978F13'),
+      this.EMP.balanceOf('0xD90a4D22a3B406A7e9f59d2c295C2D8554CD88B0'),
+      this.EMP.balanceOf('0x0000000000000000000000000000000000000000'),
+    ]);
+    
     const empCirculatingSupply = supply.sub(empRewardPoolSupply).sub(empRewardPoolSupply2).sub(oldTreasurySupply).sub(oldBoardroomSupply).sub(burnSupply);
     // const priceInBNB = await this.getTokenPriceFromPancakeswap(this.EMP);
     const priceInETH = await this.getTokenPriceFromPancakeswapETH(this.EMP);
@@ -191,10 +194,10 @@ export class EmpFinance {
    * TotalSupply
    * CirculatingSupply (always equal to total supply for bonds)
    */
-  async getBondStat(): Promise<TokenStat> {
-    const {Treasury} = this.contracts;
+  async getBondStat(version: number): Promise<TokenStat> {
+    const {Treasury, TreasuryV2} = this.contracts;
     const empStat = await this.getEmpStat();
-    const bondEmpRatioBN = await Treasury.getBondPremiumRate();
+    const bondEmpRatioBN = version === 0 ? await Treasury.getBondPremiumRate() : await TreasuryV2.getBondPremiumRate();
     const modifier = bondEmpRatioBN / 1e18 > 1 ? bondEmpRatioBN / 1e18 : 1;
     const bondPriceInBNB = (Number(empStat.tokenInFtm) * modifier).toFixed(2);
     const priceOfEBondInDollars = (Number(empStat.priceInDollars) * modifier).toFixed(2);
@@ -233,9 +236,9 @@ export class EmpFinance {
     };
   }
 
-  async getEmpStatInEstimatedTWAP(): Promise<TokenStat> {
-    const {Oracle, EmpRewardPool} = this.contracts;
-    const expectedPrice = await Oracle.twap(this.EMP.address, ethers.utils.parseEther('4000'));
+  async getEmpStatInEstimatedTWAP(version: number): Promise<TokenStat> {
+    const {Oracle, OracleV2, EmpRewardPool} = this.contracts;
+    const expectedPrice = version === 0 ? await Oracle.twap(this.EMP.address, ethers.utils.parseEther('4000')) : await OracleV2.twap(this.EMP.address, ethers.utils.parseEther('4000'));
 
     const supply = await this.EMP.totalSupply();
     const empRewardPoolSupply = await this.EMP.balanceOf(EmpRewardPool.address);
@@ -248,9 +251,9 @@ export class EmpFinance {
     };
   }
 
-  async getEmpPriceInLastTWAP(): Promise<BigNumber> {
-    const {Treasury} = this.contracts;
-    return Treasury.getEmpUpdatedPrice();
+  async getEmpPriceInLastTWAP(version: number): Promise<BigNumber> {
+    const {Treasury, TreasuryV2} = this.contracts;
+    return version === 0 ? Treasury.getEmpUpdatedPrice() : TreasuryV2.getEmpUpdatedPrice();
   }
 
   // async getEmpPegTWAP(): Promise<any> {
@@ -260,10 +263,10 @@ export class EmpFinance {
   //   return updatedPrice2;
   // }
 
-  async getBondsPurchasable(): Promise<BigNumber> {
-    const {Treasury} = this.contracts;
+  async getBondsPurchasable(version: number): Promise<BigNumber> {
+    const {Treasury, TreasuryV2} = this.contracts;
     // const burnableEmp = (Number(Treasury.getBurnableEmpLeft()) * 1000).toFixed(2).toString();
-    return Treasury.getBurnableEmpLeft();
+    return version === 0 ? Treasury.getBurnableEmpLeft() : TreasuryV2.getBurnableEmpLeft();
   }
 
   /**
@@ -382,34 +385,34 @@ export class EmpFinance {
   //=========================== END ===================================
   //===================================================================
 
-  async getCurrentEpoch(): Promise<BigNumber> {
-    const {Treasury} = this.contracts;
-    return Treasury.epoch();
+  async getCurrentEpoch(version: number): Promise<BigNumber> {
+    const {Treasury, TreasuryV2} = this.contracts;
+    return version === 0 ? Treasury.epoch() : TreasuryV2.epoch();
   }
 
-  async getBondOraclePriceInLastTWAP(): Promise<BigNumber> {
-    const {Treasury} = this.contracts;
-    return Treasury.getBondPremiumRate();
+  async getBondOraclePriceInLastTWAP(version: number): Promise<BigNumber> {
+    const {Treasury, TreasuryV2} = this.contracts;
+    return version === 0 ? Treasury.getBondPremiumRate() : TreasuryV2.getBondPremiumRate();
   }
 
   /**
    * Buy bonds with cash.
    * @param amount amount of cash to purchase bonds with.
    */
-  async buyBonds(amount: string | number): Promise<TransactionResponse> {
-    const {Treasury} = this.contracts;
-    const treasuryEmpPrice = await Treasury.getEmpPrice();
-    return await Treasury.buyBonds(decimalToBalance(amount), treasuryEmpPrice);
+  async buyBonds(version: number, amount: string | number): Promise<TransactionResponse> {
+    const {Treasury, TreasuryV2} = this.contracts;
+    const treasuryEmpPrice = version === 0 ? await Treasury.getEmpPrice() : await TreasuryV2.getEmpPrice();
+    return version === 0 ? await Treasury.buyBonds(decimalToBalance(amount), treasuryEmpPrice) : await TreasuryV2.buyBonds(decimalToBalance(amount), treasuryEmpPrice);
   }
 
   /**
    * Redeem bonds for cash.
    * @param amount amount of bonds to redeem.
    */
-  async redeemBonds(amount: string): Promise<TransactionResponse> {
-    const {Treasury} = this.contracts;
-    const priceForEmp = await Treasury.getEmpPrice();
-    return await Treasury.redeemBonds(decimalToBalance(amount), priceForEmp);
+  async redeemBonds(version: number, amount: string): Promise<TransactionResponse> {
+    const {Treasury, TreasuryV2} = this.contracts;
+    const priceForEmp = version === 0 ? await Treasury.getEmpPrice() : await TreasuryV2.getEmpPrice();
+    return version === 0 ? await Treasury.redeemBonds(decimalToBalance(amount), priceForEmp) : await TreasuryV2.redeemBonds(decimalToBalance(amount), priceForEmp);
   }
 
   async getTotalValueLocked(): Promise<Number> {
@@ -417,18 +420,25 @@ export class EmpFinance {
     for (const bankInfo of Object.values(bankDefinitions)) {
       const pool = this.contracts[bankInfo.contract];
       const token = this.externalTokens[bankInfo.depositTokenName];
-      const tokenPrice = await this.getDepositTokenPriceInDollars(bankInfo.depositTokenName, token);
-      const tokenAmountInPool = await token.balanceOf(pool.address);
+      const [tokenPrice, tokenAmountInPool] = await Promise.all([
+        this.getDepositTokenPriceInDollars(bankInfo.depositTokenName, token),
+        token.balanceOf(pool.address)
+      ]);
       const value = Number(getDisplayBalance(tokenAmountInPool, token.decimal)) * Number(tokenPrice);
       const poolValue = Number.isNaN(value) ? 0 : value;
       totalValue += poolValue;
     }
 
-    const ESHAREPrice = (await this.getShareStat()).priceInDollars;
-    const boardroomtShareBalanceOf = await this.ESHARE.balanceOf(this.currentBoardroom().address);
+    const [shareStat, boardroomtShareBalanceOf, boardroomV2tShareBalanceOf] = await Promise.all([
+      this.getShareStat(),
+      this.ESHARE.balanceOf(this.currentBoardroom(0).address),
+      this.ESHARE.balanceOf(this.currentBoardroom(1).address)
+    ]);
+    const ESHAREPrice = shareStat.priceInDollars;
     const boardroomTVL = Number(getDisplayBalance(boardroomtShareBalanceOf, this.ESHARE.decimal)) * Number(ESHAREPrice);
+    const boardroomV2TVL = Number(getDisplayBalance(boardroomV2tShareBalanceOf, this.ESHARE.decimal)) * Number(ESHAREPrice);
 
-    return totalValue + boardroomTVL;
+    return totalValue + boardroomTVL + boardroomV2TVL;
   }
 
   /**
@@ -545,11 +555,11 @@ export class EmpFinance {
     return 'latest';
   }
 
-  currentBoardroom(): Contract {
+  currentBoardroom(version: number): Contract {
     if (!this.boardroomVersionOfUser) {
       //throw new Error('you must unlock the wallet to continue.');
     }
-    return this.contracts.Boardroom;
+    return version === 0 ? this.contracts.Boardroom : this.contracts.BoardroomV2;
   }
 
   isOldBoardroomMember(): boolean {
@@ -696,8 +706,8 @@ export class EmpFinance {
   //===================================================================
   //===================================================================
 
-  async getBoardroomAPR() {
-    const Boardroom = this.currentBoardroom();
+  async getBoardroomAPR(version: number) {
+    const Boardroom = this.currentBoardroom(version);
     const latestSnapshotIndex = await Boardroom.latestSnapshotIndex();
     const lastHistory = await Boardroom.boardroomHistory(latestSnapshotIndex);
 
@@ -719,8 +729,8 @@ export class EmpFinance {
    * Checks if the user is allowed to retrieve their reward from the Boardroom
    * @returns true if user can withdraw reward, false if they can't
    */
-  async canUserClaimRewardFromBoardroom(): Promise<boolean> {
-    const Boardroom = this.currentBoardroom();
+  async canUserClaimRewardFromBoardroom(version: number): Promise<boolean> {
+    const Boardroom = this.currentBoardroom(version);
     return await Boardroom.canClaimReward(this.myAccount);
   }
 
@@ -728,10 +738,10 @@ export class EmpFinance {
    * Checks if the user is allowed to retrieve their reward from the Boardroom
    * @returns true if user can withdraw reward, false if they can't
    */
-  async canUserUnstakeFromBoardroom(): Promise<boolean> {
-    const Boardroom = this.currentBoardroom();
+  async canUserUnstakeFromBoardroom(version: number): Promise<boolean> {
+    const Boardroom = this.currentBoardroom(version);
     const canWithdraw = await Boardroom.canWithdraw(this.myAccount);
-    const stakedAmount = await this.getStakedSharesOnBoardroom();
+    const stakedAmount = await this.getStakedSharesOnBoardroom(version);
     const notStaked = Number(getDisplayBalance(stakedAmount, this.ESHARE.decimal)) === 0;
     const result = notStaked ? true : canWithdraw;
     return result;
@@ -743,56 +753,56 @@ export class EmpFinance {
     return BigNumber.from(0);
   }
 
-  async getTotalStakedInBoardroom(): Promise<BigNumber> {
-    const Boardroom = this.currentBoardroom();
+  async getTotalStakedInBoardroom(version: number): Promise<BigNumber> {
+    const Boardroom = this.currentBoardroom(version);
     return await Boardroom.totalSupply();
   }
 
-  async stakeShareToBoardroom(amount: string): Promise<TransactionResponse> {
+  async stakeShareToBoardroom(version: number, amount: string): Promise<TransactionResponse> {
     if (this.isOldBoardroomMember()) {
       throw new Error("you're using old boardroom. please withdraw and deposit the ESHARE again.");
     }
-    const Boardroom = this.currentBoardroom();
+    const Boardroom = this.currentBoardroom(version);
     return await Boardroom.stake(decimalToBalance(amount));
   }
 
-  async getStakedSharesOnBoardroom(): Promise<BigNumber> {
-    const Boardroom = this.currentBoardroom();
+  async getStakedSharesOnBoardroom(version: number): Promise<BigNumber> {
+    const Boardroom = this.currentBoardroom(version);
     if (this.boardroomVersionOfUser === 'v1') {
       return await Boardroom.getShareOf(this.myAccount);
     }
     return await Boardroom.balanceOf(this.myAccount);
   }
 
-  async getEarningsOnBoardroom(): Promise<BigNumber> {
-    const Boardroom = this.currentBoardroom();
+  async getEarningsOnBoardroom(version: number): Promise<BigNumber> {
+    const Boardroom = this.currentBoardroom(version);
     if (this.boardroomVersionOfUser === 'v1') {
       return await Boardroom.getCashEarningsOf(this.myAccount);
     }
     return await Boardroom.earned(this.myAccount);
   }
 
-  async withdrawShareFromBoardroom(amount: string): Promise<TransactionResponse> {
-    const Boardroom = this.currentBoardroom();
+  async withdrawShareFromBoardroom(version: number, amount: string): Promise<TransactionResponse> {
+    const Boardroom = this.currentBoardroom(version);
     return await Boardroom.withdraw(decimalToBalance(amount));
   }
 
-  async harvestCashFromBoardroom(): Promise<TransactionResponse> {
-    const Boardroom = this.currentBoardroom();
+  async harvestCashFromBoardroom(version: number): Promise<TransactionResponse> {
+    const Boardroom = this.currentBoardroom(version);
     if (this.boardroomVersionOfUser === 'v1') {
       return await Boardroom.claimDividends();
     }
     return await Boardroom.claimReward();
   }
 
-  async exitFromBoardroom(): Promise<TransactionResponse> {
-    const Boardroom = this.currentBoardroom();
+  async exitFromBoardroom(version: number): Promise<TransactionResponse> {
+    const Boardroom = this.currentBoardroom(version);
     return await Boardroom.exit();
   }
 
-  async getTreasuryNextAllocationTime(): Promise<AllocationTime> {
-    const {Treasury} = this.contracts;
-    const nextEpochTimestamp: BigNumber = await Treasury.nextEpochPoint();
+  async getTreasuryNextAllocationTime(version: number): Promise<AllocationTime> {
+    const {Treasury, TreasuryV2} = this.contracts;
+    const nextEpochTimestamp: BigNumber = version === 0 ? await Treasury.nextEpochPoint() : await TreasuryV2.nextEpochPoint();
     const nextAllocation = new Date(nextEpochTimestamp.mul(1000).toNumber());
     const prevAllocation = new Date(Date.now());
 
@@ -804,15 +814,16 @@ export class EmpFinance {
    * their reward from the boardroom
    * @returns Promise<AllocationTime>
    */
-  async getUserClaimRewardTime(): Promise<AllocationTime> {
-    const {Boardroom, Treasury} = this.contracts;
-    const nextEpochTimestamp = await Boardroom.nextEpochPoint(); //in unix timestamp
-    const currentEpoch = await Boardroom.epoch();
-    const mason = await Boardroom.members(this.myAccount);
+  async getUserClaimRewardTime(version: number): Promise<AllocationTime> {
+    const {Boardroom, BoardroomV2, Treasury, TreasuryV2} = this.contracts;
+    const selectedBoardroom = version === 0 ? Boardroom : BoardroomV2;
+    const nextEpochTimestamp = await selectedBoardroom.nextEpochPoint(); //in unix timestamp
+    const currentEpoch = await selectedBoardroom.epoch();
+    const mason = await selectedBoardroom.members(this.myAccount);
     const startTimeEpoch = mason.epochTimerStart;
-    const period = await Treasury.PERIOD();
+    const period = version === 0 ? await Treasury.PERIOD() : await TreasuryV2.PERIOD();
     const periodInHours = period / 60 / 60; // 6 hours, period is displayed in seconds which is 21600
-    const rewardLockupEpochs = await Boardroom.rewardLockupEpochs();
+    const rewardLockupEpochs = await selectedBoardroom.rewardLockupEpochs();
     const targetEpochForClaimUnlock = Number(startTimeEpoch) + Number(rewardLockupEpochs);
 
     const fromDate = new Date(Date.now());
@@ -837,18 +848,19 @@ export class EmpFinance {
    * from the boardroom
    * @returns Promise<AllocationTime>
    */
-  async getUserUnstakeTime(): Promise<AllocationTime> {
-    const {Boardroom, Treasury} = this.contracts;
-    const nextEpochTimestamp = await Boardroom.nextEpochPoint();
-    const currentEpoch = await Boardroom.epoch();
-    const mason = await Boardroom.members(this.myAccount);
+  async getUserUnstakeTime(version: number): Promise<AllocationTime> {
+    const {Boardroom, BoardroomV2, Treasury, TreasuryV2} = this.contracts;
+    const selectedBoardroom = version === 0 ? Boardroom : BoardroomV2;
+    const nextEpochTimestamp = await selectedBoardroom.nextEpochPoint();
+    const currentEpoch = await selectedBoardroom.epoch();
+    const mason = await selectedBoardroom.members(this.myAccount);
     const startTimeEpoch = mason.epochTimerStart;
-    const period = await Treasury.PERIOD();
+    const period = version === 0 ? await Treasury.PERIOD() : await TreasuryV2.PERIOD();
     const PeriodInHours = period / 60 / 60;
-    const withdrawLockupEpochs = await Boardroom.withdrawLockupEpochs();
+    const withdrawLockupEpochs = await selectedBoardroom.withdrawLockupEpochs();
     const fromDate = new Date(Date.now());
     const targetEpochForClaimUnlock = Number(startTimeEpoch) + Number(withdrawLockupEpochs);
-    const stakedAmount = await this.getStakedSharesOnBoardroom();
+    const stakedAmount = await this.getStakedSharesOnBoardroom(version);
     if (currentEpoch <= targetEpochForClaimUnlock && Number(stakedAmount) === 0) {
       return {from: fromDate, to: fromDate};
     } else if (targetEpochForClaimUnlock - currentEpoch === 1) {
@@ -874,10 +886,10 @@ export class EmpFinance {
         assetUrl = 'https://raw.githubusercontent.com/empmoney/emp-assets/master/emp-512.png';
       } else if (assetName === 'ESHARE') {
         asset = this.ESHARE;
-        assetUrl = 'https://raw.githubusercontent.com/empmoney/emp-assets/master/bshare-512.png';
+        assetUrl = 'https://raw.githubusercontent.com/empmoney/emp-assets/master/eshare-512.png';
       } else if (assetName === 'EBOND') {
         asset = this.EBOND;
-        assetUrl = 'https://raw.githubusercontent.com/empmoney/emp-assets/master/bbond-512.png';
+        assetUrl = 'https://raw.githubusercontent.com/empmoney/emp-assets/master/ebond-512.png';
       }
       await ethereum.request({
         method: 'wallet_watchAsset',
@@ -923,17 +935,18 @@ export class EmpFinance {
   /**
    * @returns an array of the regulation events till the most up to date epoch
    */
-  async listenForRegulationsEvents(): Promise<any> {
-    const {Treasury} = this.contracts;
+  async listenForRegulationsEvents(version: number): Promise<any> {
+    const {Treasury, TreasuryV2} = this.contracts;
+    const selectedTreasury = version === 0 ? Treasury : TreasuryV2;
 
-    const treasuryDaoFundedFilter = Treasury.filters.DaoFundFunded();
-    const treasuryDevFundedFilter = Treasury.filters.DevFundFunded();
-    const treasuryBoardroomFundedFilter = Treasury.filters.BoardroomFunded();
-    const boughtBondsFilter = Treasury.filters.BoughtBonds();
-    const redeemBondsFilter = Treasury.filters.RedeemedBonds();
+    const treasuryDaoFundedFilter = selectedTreasury.filters.DaoFundFunded();
+    const treasuryDevFundedFilter = selectedTreasury.filters.DevFundFunded();
+    const treasuryBoardroomFundedFilter = selectedTreasury.filters.BoardroomFunded();
+    const boughtBondsFilter = selectedTreasury.filters.BoughtBonds();
+    const redeemBondsFilter = selectedTreasury.filters.RedeemedBonds();
 
     let epochBlocksRanges: any[] = [];
-    let boardroomFundEvents = await Treasury.queryFilter(treasuryBoardroomFundedFilter);
+    let boardroomFundEvents = await selectedTreasury.queryFilter(treasuryBoardroomFundedFilter);
     var events: any[] = [];
     boardroomFundEvents.forEach(function callback(value, index) {
       events.push({epoch: index + 1});
@@ -959,21 +972,23 @@ export class EmpFinance {
 
     epochBlocksRanges.forEach(async (value, index) => {
       events[index].bondsBought = await this.getBondsWithFilterForPeriod(
+        version,
         boughtBondsFilter,
         value.startBlock,
         value.endBlock,
       );
       events[index].bondsRedeemed = await this.getBondsWithFilterForPeriod(
+        version,
         redeemBondsFilter,
         value.startBlock,
         value.endBlock,
       );
     });
-    let DEVFundEvents = await Treasury.queryFilter(treasuryDevFundedFilter);
+    let DEVFundEvents = await selectedTreasury.queryFilter(treasuryDevFundedFilter);
     DEVFundEvents.forEach(function callback(value, index) {
       events[index].devFund = getDisplayBalance(value.args[1]);
     });
-    let DAOFundEvents = await Treasury.queryFilter(treasuryDaoFundedFilter);
+    let DAOFundEvents = await selectedTreasury.queryFilter(treasuryDaoFundedFilter);
     DAOFundEvents.forEach(function callback(value, index) {
       events[index].daoFund = getDisplayBalance(value.args[1]);
     });
@@ -987,9 +1002,9 @@ export class EmpFinance {
    * @param to block number
    * @returns the amount of bonds events emitted based on the filter provided during a specific period
    */
-  async getBondsWithFilterForPeriod(filter: EventFilter, from: number, to: number): Promise<number> {
-    const {Treasury} = this.contracts;
-    const bondsAmount = await Treasury.queryFilter(filter, from, to);
+  async getBondsWithFilterForPeriod(version: number, filter: EventFilter, from: number, to: number): Promise<number> {
+    const {Treasury, TreasuryV2} = this.contracts;
+    const bondsAmount = version === 0 ? await Treasury.queryFilter(filter, from, to) : await TreasuryV2.queryFilter(filter, from, to);
     return bondsAmount.length;
   }
 

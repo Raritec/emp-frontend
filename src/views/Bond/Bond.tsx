@@ -31,35 +31,36 @@ const BackgroundImage = createGlobalStyle`
 `;
 
 const Bond: React.FC = () => {
+  const version = 1;
   const {path} = useRouteMatch();
   const {account} = useWallet();
   const empFinance = useEmpFinance();
   const addTransaction = useTransactionAdder();
-  const bondStat = useBondStats();
+  const bondStat = useBondStats(version);
   const empStat = useEmpStats();
-  const cashPrice = useCashPriceInLastTWAP();
+  const cashPrice = useCashPriceInLastTWAP(version);
 
-  const bondsPurchasable = useBondsPurchasable();
+  const bondsPurchasable = useBondsPurchasable(version);
 
   const bondBalance = useTokenBalance(empFinance?.EBOND);
   // const scalingFactor = useMemo(() => (cashPrice ? Number(cashPrice).toFixed(4) : null), [cashPrice]);
 
   const handleBuyBonds = useCallback(
     async (amount: string) => {
-      const tx = await empFinance.buyBonds(amount);
+      const tx = await empFinance.buyBonds(version, amount);
       addTransaction(tx, {
         summary: `Buy ${Number(amount).toFixed(2)} EBOND with ${amount} EMP`,
       });
     },
-    [empFinance, addTransaction],
+    [empFinance, addTransaction, version],
   );
 
   const handleRedeemBonds = useCallback(
     async (amount: string) => {
-      const tx = await empFinance.redeemBonds(amount);
+      const tx = await empFinance.redeemBonds(version, amount);
       addTransaction(tx, {summary: `Redeem ${amount} EBOND`});
     },
-    [empFinance, addTransaction],
+    [empFinance, addTransaction, version],
   );
   const isBondRedeemable = useMemo(() => cashPrice.gt(BOND_REDEEM_PRICE_BN), [cashPrice]);
   const isBondPurchasable = useMemo(() => Number(bondStat?.tokenInFtm) < 1.01, [bondStat]);
