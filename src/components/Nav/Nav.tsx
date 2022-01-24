@@ -1,6 +1,6 @@
-import React, {useMemo, useEffect} from 'react';
+import React, { useMemo, useEffect } from 'react';
 import clsx from 'clsx';
-import {Link} from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import {
   AppBar,
   Box,
@@ -23,11 +23,11 @@ import useShareStats from '../../hooks/useeShareStats';
 import MenuIcon from '@material-ui/icons/Menu';
 import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
 import ChevronRightIcon from '@material-ui/icons/ChevronRight';
-import {makeStyles, useTheme} from '@material-ui/core/styles';
+import { makeStyles, useTheme } from '@material-ui/core/styles';
 import AccountButton from './AccountButton';
 
 import empLogo from '../../assets/img/emp-logo-final.gif';
-import {roundAndFormatNumber} from '../../0x';
+import { roundAndFormatNumber } from '../../0x';
 import TokenSymbol from '../TokenSymbol';
 
 const useStyles = makeStyles((theme) => ({
@@ -117,21 +117,18 @@ const Nav = () => {
       <Toolbar className={classes.toolbar}>
         {matches ? (
           <>
-            <Typography variant="h6" color="inherit" noWrap style={{flexGrow: '0', marginBottom: '-5px'}} className={classes.toolbarTitle}>
+            <Typography variant="h6" color="inherit" noWrap style={{ flexGrow: '0', marginBottom: '-5px' }} className={classes.toolbarTitle}>
               {/* <a className={ classes.brandLink } href="/">Emp Money</a> */}
               <Link to="/" color="inherit" className={classes.brandLink}>
                 <img alt="emp.money" src={empLogo} height="80px" />
               </Link>
             </Typography>
-            <Box style={{paddingLeft: '15px', paddingTop: '10px', fontSize: '1rem', flexGrow: '1'}}>
+            <Box style={{ paddingLeft: '15px', paddingTop: '10px', fontSize: '1rem', flexGrow: '1' }}>
               <Link to="/" className={'navLink ' + classes.link}>
                 Home
               </Link>
               <Link to="/farm" className={'navLink ' + classes.link}>
                 Farm
-              </Link>
-              <Link to="/boardroom" className={'navLink ' + classes.link}>
-                Boardroom
               </Link>
               <Link to="/boardroomV2" className={'navLink ' + classes.link}>
                 BoardroomV2
@@ -149,6 +146,9 @@ const Nav = () => {
               <Link color="textPrimary" to="/regulations" className={classes.link}>
                 Regulations
               </Link> */}
+              <a href="https://yieldwolf.finance/bsc/emp-money" className={'navLink ' + classes.link} rel="noopener" target="_blank">
+                AutoVaults
+              </a>
               <a href="https://docs.emp.money/documents" className={'navLink ' + classes.link} rel="noopener" target="_blank">
                 Docs
               </a>
@@ -189,7 +189,7 @@ const Nav = () => {
             <img
               alt="emp.money"
               src={empLogo}
-              style={{height: '60px', marginTop: '5px', marginLeft: '10px', marginRight: '15px'}}
+              style={{ height: '60px', marginTop: '5px', marginLeft: '10px', marginRight: '15px' }}
             />
             <AccountButton text="Connect" />
             <Drawer
@@ -219,12 +219,14 @@ const Nav = () => {
                 </ListItem>
                 <ListItemLink primary="Home" to="/" />
                 <ListItemLink primary="Farm" to="/farm" />
-                <ListItemLink primary="Boardroom" to="/boardroom" />
                 <ListItemLink primary="BoardroomV2" to="/boardroomV2" />
                 <ListItemLink primary="Bond" to="/bond" />
                 {/* <ListItemLink primary="SBS" to="/sbs" /> */}
                 {/* <ListItemLink primary="Liquidity" to="/liquidity" /> */}
                 {/* <ListItemLink primary="Regulations" to="/regulations" /> */}
+                <ListItem button component="a" href="https://yieldwolf.finance/bsc/emp-money">
+                  <ListItemText>AutoVaults</ListItemText>
+                </ListItem>
                 <ListItem button component="a" href="https://docs.emp.money/documents">
                   <ListItemText>Docs</ListItemText>
                 </ListItem>

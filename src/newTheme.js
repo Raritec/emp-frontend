@@ -1,7 +1,7 @@
 //Your theme for the new stuff using material UI has been copied here so it doesn't conflict
-import {createMuiTheme} from '@material-ui/core/styles';
+import {createTheme} from '@material-ui/core/styles';
 
-const newTheme = createMuiTheme({
+const newTheme = createTheme({
   palette: {
     type: 'light',
     text: {

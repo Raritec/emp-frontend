@@ -1,23 +1,24 @@
-import React, {useMemo} from 'react';
-import {useWallet} from 'use-wallet';
+import React, { useMemo } from 'react';
+import { useWallet } from 'use-wallet';
+import { Link } from 'react-router-dom';
 import moment from 'moment';
 import styled from 'styled-components';
 import Spacer from '../../components/Spacer';
 import Harvest from './components/Harvest';
 import Stake from './components/Stake';
-import {makeStyles} from '@material-ui/core/styles';
+import { makeStyles } from '@material-ui/core/styles';
 import config from '../../config';
 
-import {Box, Card, CardContent, Button, Typography, Grid} from '@material-ui/core';
+import { Box, Card, CardContent, Button, Typography, Grid } from '@material-ui/core';
 
-import {Alert} from '@material-ui/lab';
+import { Alert } from '@material-ui/lab';
 
 import UnlockWallet from '../../components/UnlockWallet';
 import Page from '../../components/Page';
 
 import useRedeemOnBoardroom from '../../hooks/useRedeemOnBoardroom';
 import useStakedBalanceOnBoardroom from '../../hooks/useStakedBalanceOnBoardroom';
-import {getDisplayBalance} from '../../utils/formatBalance';
+import { getDisplayBalance } from '../../utils/formatBalance';
 import useCurrentEpoch from '../../hooks/useCurrentEpoch';
 import useFetchBoardroomAPR from '../../hooks/useFetchBoardroomAPR';
 
@@ -27,7 +28,7 @@ import useTotalStakedOnBoardroom from '../../hooks/useTotalStakedOnBoardroom';
 import useClaimRewardCheck from '../../hooks/boardroom/useClaimRewardCheck';
 import useWithdrawCheck from '../../hooks/boardroom/useWithdrawCheck';
 import ProgressCountdown from './components/ProgressCountdown';
-import {createGlobalStyle} from 'styled-components';
+import { createGlobalStyle } from 'styled-components';
 
 import HomeImage from '../../assets/img/background.png';
 import LaunchCountdown from '../../components/LaunchCountdown';
@@ -51,8 +52,8 @@ const useStyles = makeStyles((theme) => ({
 const BoardroomV2 = () => {
   const version = 1;
   const classes = useStyles();
-  const {account} = useWallet();
-  const {onRedeem} = useRedeemOnBoardroom(version);
+  const { account } = useWallet();
+  const { onRedeem } = useRedeemOnBoardroom(version);
   const stakedBalance = useStakedBalanceOnBoardroom(version);
   const currentEpoch = useCurrentEpoch(version).add(8);
   const cashStat = useCashPriceInEstimatedTWAP(version);
@@ -61,7 +62,7 @@ const BoardroomV2 = () => {
   const canClaimReward = useClaimRewardCheck(version);
   const canWithdraw = useWithdrawCheck(version);
   const scalingFactor = useMemo(() => (cashStat ? Number(cashStat.priceInDollars).toFixed(4) : null), [cashStat]);
-  const {to} = useTreasuryAllocationTimes(version);
+  const { to } = useTreasuryAllocationTimes(version);
   const esharesActive = Date.now() >= config.boardroomLaunchesAt.getTime();
 
   return (
@@ -69,60 +70,60 @@ const BoardroomV2 = () => {
       <BackgroundImage />
       {!!account ? (
         !esharesActive ? <LaunchCountdown deadline={config.boardroomLaunchesAt} description='Home' descriptionLink='/' />
-        : <>
-          <Typography color="textPrimary" align="center" variant="h3" gutterBottom>
-            Boardroom
-          </Typography>
-          <Box mt={5}>
-            <Grid container justify="center" spacing={3}>
-              <Grid item xs={12} md={2} lg={2} className={classes.gridItem}>
-                <Card className={classes.gridItem}>
-                  <CardContent style={{textAlign: 'center'}}>
-                    <Typography style={{textTransform: 'uppercase', color: '#155aca'}}>Next Epoch</Typography>
-                    <ProgressCountdown base={moment().toDate()} hideBar={true} deadline={to} description="Next Epoch" />
-                  </CardContent>
-                </Card>
+          : <>
+            <Typography color="textPrimary" align="center" variant="h3" gutterBottom>
+              Boardroom
+            </Typography>
+            <Box mt={5}>
+              <Grid container justify="center" spacing={3}>
+                <Grid item xs={12} md={2} lg={2} className={classes.gridItem}>
+                  <Card className={classes.gridItem}>
+                    <CardContent style={{ textAlign: 'center' }}>
+                      <Typography style={{ textTransform: 'uppercase', color: '#155aca' }}>Next Epoch</Typography>
+                      <ProgressCountdown base={moment().toDate()} hideBar={true} deadline={to} description="Next Epoch" />
+                    </CardContent>
+                  </Card>
+                </Grid>
+                <Grid item xs={12} md={2} lg={2} className={classes.gridItem}>
+                  <Card className={classes.gridItem}>
+                    <CardContent align="center">
+                      <Typography style={{ textTransform: 'uppercase', color: '#155aca' }}>Current Epoch</Typography>
+                      <Typography>{Number(currentEpoch)}</Typography>
+                    </CardContent>
+                  </Card>
+                </Grid>
+                <Grid item xs={12} md={2} lg={2} className={classes.gridItem}>
+                  <Card className={classes.gridItem}>
+                    <CardContent align="center">
+                      <Typography style={{ textTransform: 'uppercase', color: '#155aca' }}>
+                        EMP PEG <small>(TWAP)</small>
+                      </Typography>
+                      <Typography>{scalingFactor} ETH</Typography>
+                      <Typography>
+                        <small>per 4,000 EMP</small>
+                      </Typography>
+                    </CardContent>
+                  </Card>
+                </Grid>
+                <Grid item xs={12} md={2} lg={2} className={classes.gridItem}>
+                  <Card className={classes.gridItem}>
+                    <CardContent align="center">
+                      <Typography style={{ textTransform: 'uppercase', color: '#155aca' }}>APR</Typography>
+                      <Typography>{boardroomAPR > 1 ? boardroomAPR.toFixed(2) : 'TBD'}%</Typography>
+                    </CardContent>
+                  </Card>
+                </Grid>
+                <Grid item xs={12} md={2} lg={2}>
+                  <Card className={classes.gridItem}>
+                    <CardContent align="center">
+                      <Typography style={{ textTransform: 'uppercase', color: '#155aca' }}>ESHARES Staked</Typography>
+                      <Typography>{getDisplayBalance(totalStaked)}</Typography>
+                    </CardContent>
+                  </Card>
+                </Grid>
               </Grid>
-              <Grid item xs={12} md={2} lg={2} className={classes.gridItem}>
-                <Card className={classes.gridItem}>
-                  <CardContent align="center">
-                    <Typography style={{textTransform: 'uppercase', color: '#155aca'}}>Current Epoch</Typography>
-                    <Typography>{Number(currentEpoch)}</Typography>
-                  </CardContent>
-                </Card>
-              </Grid>
-              <Grid item xs={12} md={2} lg={2} className={classes.gridItem}>
-                <Card className={classes.gridItem}>
-                  <CardContent align="center">
-                    <Typography style={{textTransform: 'uppercase', color: '#155aca'}}>
-                      EMP PEG <small>(TWAP)</small>
-                    </Typography>
-                    <Typography>{scalingFactor} ETH</Typography>
-                    <Typography>
-                      <small>per 4,000 EMP</small>
-                    </Typography>
-                  </CardContent>
-                </Card>
-              </Grid>
-              <Grid item xs={12} md={2} lg={2} className={classes.gridItem}>
-                <Card className={classes.gridItem}>
-                  <CardContent align="center">
-                    <Typography style={{textTransform: 'uppercase', color: '#155aca'}}>APR</Typography>
-                    <Typography>{boardroomAPR > 1 ? boardroomAPR.toFixed(2) : 'TBD'}%</Typography>
-                  </CardContent>
-                </Card>
-              </Grid>
-              <Grid item xs={12} md={2} lg={2}>
-                <Card className={classes.gridItem}>
-                  <CardContent align="center">
-                    <Typography style={{textTransform: 'uppercase', color: '#155aca'}}>ESHARES Staked</Typography>
-                    <Typography>{getDisplayBalance(totalStaked)}</Typography>
-                  </CardContent>
-                </Card>
-              </Grid>
-            </Grid>
 
-            {/* <Grid container justify="center">
+              {/* <Grid container justify="center">
               <Box mt={3} style={{ width: '600px' }}>
                 <Alert variant="filled" severity="warning">
                   <b> Boardroom smart contract has been updated! </b><br />
@@ -133,21 +134,21 @@ const BoardroomV2 = () => {
               </Box>
             </Grid> */}
 
-            <Box mt={4}>
-              <StyledBoardroom>
-                <StyledCardsWrapper>
-                  <StyledCardWrapper>
-                    <Harvest />
-                  </StyledCardWrapper>
-                  <Spacer />
-                  <StyledCardWrapper>
-                    <Stake />
-                  </StyledCardWrapper>
-                </StyledCardsWrapper>
-              </StyledBoardroom>
-            </Box>
+              <Box mt={4}>
+                <StyledBoardroom>
+                  <StyledCardsWrapper>
+                    <StyledCardWrapper>
+                      <Harvest />
+                    </StyledCardWrapper>
+                    <Spacer />
+                    <StyledCardWrapper>
+                      <Stake />
+                    </StyledCardWrapper>
+                  </StyledCardsWrapper>
+                </StyledBoardroom>
+              </Box>
 
-            {/* <Grid container justify="center" spacing={3}>
+              {/* <Grid container justify="center" spacing={3}>
             <Grid item xs={4}>
               <Card>
                 <CardContent align="center">
@@ -176,24 +177,31 @@ const BoardroomV2 = () => {
               </Card>
             </Grid>
           </Grid> */}
-          </Box>
+            </Box>
 
-          <Box mt={5}>
-            <Grid container justify="center" spacing={3} mt={10}>
-              <Button
-                disabled={stakedBalance.eq(0) || (!canWithdraw && !canClaimReward)}
-                onClick={onRedeem}
-                className={
-                  stakedBalance.eq(0) || (!canWithdraw && !canClaimReward)
-                    ? 'shinyButtonDisabledSecondary'
-                    : 'shinyButtonSecondary'
-                }
-              >
-                Claim &amp; Withdraw
-              </Button>
-            </Grid>
-          </Box>
-        </>
+            <Box mt={5}>
+              <Grid container justify="center" spacing={3} mt={10}>
+                <Button
+                  disabled={stakedBalance.eq(0) || (!canWithdraw && !canClaimReward)}
+                  onClick={onRedeem}
+                  className={
+                    stakedBalance.eq(0) || (!canWithdraw && !canClaimReward)
+                      ? 'shinyButtonDisabledSecondary'
+                      : 'shinyButtonSecondary'
+                  }
+                >
+                  Claim &amp; Withdraw
+                </Button>
+              </Grid>
+            </Box>
+            <Box mt={5}>
+              <Grid container justify="center" spacing={3}>
+                <Alert variant="standard" severity="info" style={{ width: "20rem" }}>
+                  Please remove funds from <a href="/boardroom">BoardroomV1</a>
+                </Alert>
+              </Grid>
+            </Box>
+          </>
       ) : (
         <UnlockWallet />
       )}

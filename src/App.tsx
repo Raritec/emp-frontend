@@ -24,7 +24,7 @@ const Boardroom = lazy(() => import('./views/Boardroom'));
 const BoardroomV2 = lazy(() => import('./views/BoardroomV2'));
 const Bond = lazy(() => import('./views/Bond'));
 // const SBS = lazy(() => import('./views/Sbs'));
-// const Liquidity = lazy(() => import('./views/Liquidity'));
+const Liquidity = lazy(() => import('./views/Liquidity'));
 
 const NoMatch = () => (
   <h3 style={{position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)'}}>
@@ -68,9 +68,9 @@ const App: React.FC = () => {
             <Route path="/regulations">
               <Regulations />
             </Route>
-            {/* <Route path="/liquidity">
+            <Route path="/liquidity">
               <Liquidity />
-            </Route> */}
+            </Route>
             <Route path="*">
               <NoMatch />
             </Route>

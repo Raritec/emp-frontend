@@ -24,6 +24,7 @@ import useEmpFinance from '../../hooks/useEmpFinance';
 import {ReactComponent as IconTelegram} from '../../assets/img/telegram.svg';
 
 import EmpImage from '../../assets/img/emp_animated.gif';
+import RugDocImage from '../../assets/img/rugdoc-badge.png';
 
 import HomeImage from '../../assets/img/background.png';
 const BackgroundImage = createGlobalStyle`
@@ -200,12 +201,12 @@ const Home = () => {
           <Card style={{height: '100%'}}>
             <CardContent align="center" style={{marginTop: '2.5%'}}>
               {/* <h2 style={{ marginBottom: '20px' }}>Wallet Balance</h2> */}
-              <Button href="/boardroom" className="shinyButton" style={{margin: '10px'}}>
+              {/* <Button href="/boardroom" className="shinyButton" style={{margin: '10px'}}>
                 Stake Now
               </Button>
               <Button href="/farm" className="shinyButton" style={{margin: '10px'}}>
                 Farm Now
-              </Button>
+              </Button> */}
               <Button
                 target="_blank"
                 href={buyEmpAddress}
@@ -226,9 +227,17 @@ const Home = () => {
                 target="_blank"
                 href="https://www.youtube.com/watch?v=rqzoyNXcRsA"
                 className={'shinyButton ' + classes.button}
-                style={{marginLeft: '10px'}}
+                style={{margin: '10px'}}
               >
                 Tutorial
+              </Button>
+              <Button
+               target="_blank"
+               href="https://rugdoc.io/"
+               className={classes.button}
+               style={{marginLeft: '-4px', padding: '0'}}
+               >
+              <img src={RugDocImage} alt="rugdoc.io" height="65px" style={{paddingTop: '4px'}}/>
               </Button>
             </CardContent>
           </Card>
@@ -358,7 +367,7 @@ const Home = () => {
               </Box>
               <h2>EMP-ETH PancakeSwap LP</h2>
               <Box mt={2}>
-                <Button disabled onClick={onPresentEmpZap} className="shinyButtonDisabledSecondary">
+                <Button onClick={onPresentEmpZap} className="shinyButtonSecondary">
                   Zap In
                 </Button>
               </Box>

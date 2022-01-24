@@ -139,9 +139,9 @@ const Stake: React.FC<StakeProps> = ({bank}) => {
                 <StyledActionSpacer />
                 <IconButton
                   disabled={
-                    bank.closedForStaking ||
-                    bank.depositTokenName === 'EMP-ETH-APELP' ||
-                    bank.depositTokenName === 'EMP-ETH-LP'
+                    bank.closedForStaking // ||
+                    // bank.depositTokenName === 'EMP-ETH-APELP' ||
+                    // bank.depositTokenName === 'EMP-ETH-LP'
                   }
                   onClick={() => (bank.closedForStaking ? null : onPresentZap())}
                 >

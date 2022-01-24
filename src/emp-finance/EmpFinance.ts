@@ -1,19 +1,20 @@
+import { ESHARE_TICKER, ETH_TICKER } from './../utils/constants';
 // import { Fetcher, Route, Token } from '@uniswap/sdk';
 //import { Fetcher as FetcherSpirit, Token as TokenSpirit } from '@spiritswap/sdk';
-import {Fetcher, Route, Token} from '@pancakeswap/sdk';
-import {Configuration} from './config';
-import {ContractName, TokenStat, AllocationTime, LPStat, Bank, PoolStats, EShareSwapperStat} from './types';
-import {BigNumber, Contract, ethers, EventFilter} from 'ethers';
-import {decimalToBalance} from './ether-utils';
-import {TransactionResponse} from '@ethersproject/providers';
+import { Fetcher, Route, Token } from '@pancakeswap/sdk';
+import { Configuration } from './config';
+import { ContractName, TokenStat, AllocationTime, LPStat, Bank, PoolStats, EShareSwapperStat } from './types';
+import { BigNumber, Contract, ethers, EventFilter } from 'ethers';
+import { decimalToBalance } from './ether-utils';
+import { TransactionResponse } from '@ethersproject/providers';
 import ERC20 from './ERC20';
-import {getFullDisplayBalance, getDisplayBalance} from '../utils/formatBalance';
-import {getDefaultProvider} from '../utils/provider';
+import { getFullDisplayBalance, getDisplayBalance } from '../utils/formatBalance';
+import { getDefaultProvider } from '../utils/provider';
 import IUniswapV2PairABI from './IUniswapV2Pair.abi.json';
-import config, {bankDefinitions} from '../config';
+import config, { bankDefinitions } from '../config';
 import moment from 'moment';
-import {parseUnits} from 'ethers/lib/utils';
-import {BNB_TICKER, SPOOKY_ROUTER_ADDR, EMP_TICKER} from '../utils/constants';
+import { parseUnits } from 'ethers/lib/utils';
+import { BNB_TICKER, SPOOKY_ROUTER_ADDR, EMP_TICKER } from '../utils/constants';
 /**
  * An API module of Emp Money contracts.
  * All contract-interacting domain logic should be defined in here.
@@ -23,8 +24,8 @@ export class EmpFinance {
   provider: ethers.providers.Web3Provider;
   signer?: ethers.Signer;
   config: Configuration;
-  contracts: {[name: string]: Contract};
-  externalTokens: {[name: string]: ERC20};
+  contracts: { [name: string]: Contract };
+  externalTokens: { [name: string]: ERC20 };
   boardroomVersionOfUser?: string;
 
   EMPETH_LP: Contract;
@@ -35,7 +36,7 @@ export class EmpFinance {
   ETH: ERC20;
 
   constructor(cfg: Configuration) {
-    const {deployments, externalTokens} = cfg;
+    const { deployments, externalTokens } = cfg;
     const provider = getDefaultProvider();
 
     // loads contracts from deployments
@@ -96,7 +97,7 @@ export class EmpFinance {
   //===================================================================
 
   async getEmpStat(): Promise<TokenStat> {
-    const {EmpRewardPool, EmpGenesisRewardPool} = this.contracts;
+    const { EmpRewardPool, EmpGenesisRewardPool } = this.contracts;
     const [supply, empRewardPoolSupply, empRewardPoolSupply2, oldTreasurySupply, oldBoardroomSupply, burnSupply] = await Promise.all([
       this.EMP.totalSupply(),
       this.EMP.balanceOf(EmpGenesisRewardPool.address),
@@ -105,7 +106,7 @@ export class EmpFinance {
       this.EMP.balanceOf('0xD90a4D22a3B406A7e9f59d2c295C2D8554CD88B0'),
       this.EMP.balanceOf('0x0000000000000000000000000000000000000000'),
     ]);
-    
+
     const empCirculatingSupply = supply.sub(empRewardPoolSupply).sub(empRewardPoolSupply2).sub(oldTreasurySupply).sub(oldBoardroomSupply).sub(burnSupply);
     // const priceInBNB = await this.getTokenPriceFromPancakeswap(this.EMP);
     const priceInETH = await this.getTokenPriceFromPancakeswapETH(this.EMP);
@@ -195,7 +196,7 @@ export class EmpFinance {
    * CirculatingSupply (always equal to total supply for bonds)
    */
   async getBondStat(version: number): Promise<TokenStat> {
-    const {Treasury, TreasuryV2} = this.contracts;
+    const { Treasury, TreasuryV2 } = this.contracts;
     const empStat = await this.getEmpStat();
     const bondEmpRatioBN = version === 0 ? await Treasury.getBondPremiumRate() : await TreasuryV2.getBondPremiumRate();
     const modifier = bondEmpRatioBN / 1e18 > 1 ? bondEmpRatioBN / 1e18 : 1;
@@ -218,7 +219,7 @@ export class EmpFinance {
    * CirculatingSupply (always equal to total supply for bonds)
    */
   async getShareStat(): Promise<TokenStat> {
-    const {EShareRewardPool} = this.contracts;
+    const { EShareRewardPool } = this.contracts;
 
     const supply = await this.ESHARE.totalSupply();
 
@@ -237,7 +238,7 @@ export class EmpFinance {
   }
 
   async getEmpStatInEstimatedTWAP(version: number): Promise<TokenStat> {
-    const {Oracle, OracleV2, EmpRewardPool} = this.contracts;
+    const { Oracle, OracleV2, EmpRewardPool } = this.contracts;
     const expectedPrice = version === 0 ? await Oracle.twap(this.EMP.address, ethers.utils.parseEther('4000')) : await OracleV2.twap(this.EMP.address, ethers.utils.parseEther('4000'));
 
     const supply = await this.EMP.totalSupply();
@@ -252,7 +253,7 @@ export class EmpFinance {
   }
 
   async getEmpPriceInLastTWAP(version: number): Promise<BigNumber> {
-    const {Treasury, TreasuryV2} = this.contracts;
+    const { Treasury, TreasuryV2 } = this.contracts;
     return version === 0 ? Treasury.getEmpUpdatedPrice() : TreasuryV2.getEmpUpdatedPrice();
   }
 
@@ -264,7 +265,7 @@ export class EmpFinance {
   // }
 
   async getBondsPurchasable(version: number): Promise<BigNumber> {
-    const {Treasury, TreasuryV2} = this.contracts;
+    const { Treasury, TreasuryV2 } = this.contracts;
     // const burnableEmp = (Number(Treasury.getBurnableEmpLeft()) * 1000).toFixed(2).toString();
     return version === 0 ? Treasury.getBurnableEmpLeft() : TreasuryV2.getBurnableEmpLeft();
   }
@@ -386,12 +387,12 @@ export class EmpFinance {
   //===================================================================
 
   async getCurrentEpoch(version: number): Promise<BigNumber> {
-    const {Treasury, TreasuryV2} = this.contracts;
+    const { Treasury, TreasuryV2 } = this.contracts;
     return version === 0 ? Treasury.epoch() : TreasuryV2.epoch();
   }
 
   async getBondOraclePriceInLastTWAP(version: number): Promise<BigNumber> {
-    const {Treasury, TreasuryV2} = this.contracts;
+    const { Treasury, TreasuryV2 } = this.contracts;
     return version === 0 ? Treasury.getBondPremiumRate() : TreasuryV2.getBondPremiumRate();
   }
 
@@ -400,7 +401,7 @@ export class EmpFinance {
    * @param amount amount of cash to purchase bonds with.
    */
   async buyBonds(version: number, amount: string | number): Promise<TransactionResponse> {
-    const {Treasury, TreasuryV2} = this.contracts;
+    const { Treasury, TreasuryV2 } = this.contracts;
     const treasuryEmpPrice = version === 0 ? await Treasury.getEmpPrice() : await TreasuryV2.getEmpPrice();
     return version === 0 ? await Treasury.buyBonds(decimalToBalance(amount), treasuryEmpPrice) : await TreasuryV2.buyBonds(decimalToBalance(amount), treasuryEmpPrice);
   }
@@ -410,7 +411,7 @@ export class EmpFinance {
    * @param amount amount of bonds to redeem.
    */
   async redeemBonds(version: number, amount: string): Promise<TransactionResponse> {
-    const {Treasury, TreasuryV2} = this.contracts;
+    const { Treasury, TreasuryV2 } = this.contracts;
     const priceForEmp = version === 0 ? await Treasury.getEmpPrice() : await TreasuryV2.getEmpPrice();
     return version === 0 ? await Treasury.redeemBonds(decimalToBalance(amount), priceForEmp) : await TreasuryV2.redeemBonds(decimalToBalance(amount), priceForEmp);
   }
@@ -570,7 +571,7 @@ export class EmpFinance {
     const ready = await this.provider.ready;
     if (!ready) return;
     // const { chainId } = this.config;
-    const {WBNB} = this.config.externalTokens;
+    const { WBNB } = this.config.externalTokens;
 
     const wftm = new Token(56, WBNB[0], WBNB[1], 'WBNB');
     const token = new Token(56, tokenContract.address, tokenContract.decimal, tokenContract.symbol);
@@ -587,7 +588,7 @@ export class EmpFinance {
     const ready = await this.provider.ready;
     if (!ready) return;
     // const { chainId } = this.config;
-    const {ETH, WBNB} = this.config.externalTokens;
+    const { ETH, WBNB } = this.config.externalTokens;
 
     const wbnb = new Token(56, WBNB[0], WBNB[1]);
     const eth = new Token(56, this.ETH.address, this.ETH.decimal, 'ETH', 'ETH');
@@ -608,7 +609,7 @@ export class EmpFinance {
     const ready = await this.provider.ready;
     if (!ready) return;
     // const { chainId } = this.config;
-    const {EMP, WBNB} = this.config.externalTokens;
+    const { EMP, WBNB } = this.config.externalTokens;
 
     const wbnb = new Token(56, WBNB[0], WBNB[1]);
     const eth = new Token(56, this.ETH.address, this.ETH.decimal, 'ETH', 'ETH');
@@ -652,7 +653,7 @@ export class EmpFinance {
   async getWBNBPriceFromPancakeswap(): Promise<string> {
     const ready = await this.provider.ready;
     if (!ready) return;
-    const {WBNB, FUSDT} = this.externalTokens;
+    const { WBNB, FUSDT } = this.externalTokens;
     try {
       const fusdt_wftm_lp_pair = this.externalTokens['USDT-BNB-LP'];
       let ftm_amount_BN = await WBNB.balanceOf(fusdt_wftm_lp_pair.address);
@@ -668,7 +669,7 @@ export class EmpFinance {
   async getETHPriceFromPancakeswap(): Promise<string> {
     const ready = await this.provider.ready;
     if (!ready) return;
-    const {ETH} = this.externalTokens;
+    const { ETH } = this.externalTokens;
     try {
       const btcPriceInBNB = await this.getTokenPriceFromPancakeswap(ETH);
 
@@ -801,12 +802,12 @@ export class EmpFinance {
   }
 
   async getTreasuryNextAllocationTime(version: number): Promise<AllocationTime> {
-    const {Treasury, TreasuryV2} = this.contracts;
+    const { Treasury, TreasuryV2 } = this.contracts;
     const nextEpochTimestamp: BigNumber = version === 0 ? await Treasury.nextEpochPoint() : await TreasuryV2.nextEpochPoint();
     const nextAllocation = new Date(nextEpochTimestamp.mul(1000).toNumber());
     const prevAllocation = new Date(Date.now());
 
-    return {from: prevAllocation, to: nextAllocation};
+    return { from: prevAllocation, to: nextAllocation };
   }
   /**
    * This method calculates and returns in a from to to format
@@ -815,7 +816,7 @@ export class EmpFinance {
    * @returns Promise<AllocationTime>
    */
   async getUserClaimRewardTime(version: number): Promise<AllocationTime> {
-    const {Boardroom, BoardroomV2, Treasury, TreasuryV2} = this.contracts;
+    const { Boardroom, BoardroomV2, Treasury, TreasuryV2 } = this.contracts;
     const selectedBoardroom = version === 0 ? Boardroom : BoardroomV2;
     const nextEpochTimestamp = await selectedBoardroom.nextEpochPoint(); //in unix timestamp
     const currentEpoch = await selectedBoardroom.epoch();
@@ -828,17 +829,17 @@ export class EmpFinance {
 
     const fromDate = new Date(Date.now());
     if (targetEpochForClaimUnlock - currentEpoch <= 0) {
-      return {from: fromDate, to: fromDate};
+      return { from: fromDate, to: fromDate };
     } else if (targetEpochForClaimUnlock - currentEpoch === 1) {
       const toDate = new Date(nextEpochTimestamp * 1000);
-      return {from: fromDate, to: toDate};
+      return { from: fromDate, to: toDate };
     } else {
       const toDate = new Date(nextEpochTimestamp * 1000);
       const delta = targetEpochForClaimUnlock - currentEpoch - 1;
       const endDate = moment(toDate)
         .add(delta * periodInHours, 'hours')
         .toDate();
-      return {from: fromDate, to: endDate};
+      return { from: fromDate, to: endDate };
     }
   }
 
@@ -849,7 +850,7 @@ export class EmpFinance {
    * @returns Promise<AllocationTime>
    */
   async getUserUnstakeTime(version: number): Promise<AllocationTime> {
-    const {Boardroom, BoardroomV2, Treasury, TreasuryV2} = this.contracts;
+    const { Boardroom, BoardroomV2, Treasury, TreasuryV2 } = this.contracts;
     const selectedBoardroom = version === 0 ? Boardroom : BoardroomV2;
     const nextEpochTimestamp = await selectedBoardroom.nextEpochPoint();
     const currentEpoch = await selectedBoardroom.epoch();
@@ -862,22 +863,22 @@ export class EmpFinance {
     const targetEpochForClaimUnlock = Number(startTimeEpoch) + Number(withdrawLockupEpochs);
     const stakedAmount = await this.getStakedSharesOnBoardroom(version);
     if (currentEpoch <= targetEpochForClaimUnlock && Number(stakedAmount) === 0) {
-      return {from: fromDate, to: fromDate};
+      return { from: fromDate, to: fromDate };
     } else if (targetEpochForClaimUnlock - currentEpoch === 1) {
       const toDate = new Date(nextEpochTimestamp * 1000);
-      return {from: fromDate, to: toDate};
+      return { from: fromDate, to: toDate };
     } else {
       const toDate = new Date(nextEpochTimestamp * 1000);
       const delta = targetEpochForClaimUnlock - Number(currentEpoch) - 1;
       const endDate = moment(toDate)
         .add(delta * PeriodInHours, 'hours')
         .toDate();
-      return {from: fromDate, to: endDate};
+      return { from: fromDate, to: endDate };
     }
   }
 
   async watchAssetInMetamask(assetName: string): Promise<boolean> {
-    const {ethereum} = window as any;
+    const { ethereum } = window as any;
     if (ethereum && ethereum.networkVersion === config.chainId.toString()) {
       let asset;
       let assetUrl;
@@ -908,11 +909,11 @@ export class EmpFinance {
   }
 
   async provideEmpFtmLP(ftmAmount: string, empAmount: BigNumber): Promise<TransactionResponse> {
-    const {TaxOffice} = this.contracts;
+    const { TaxOfficeV2 } = this.contracts;
     let overrides = {
       value: parseUnits(ftmAmount, 18),
     };
-    return await TaxOffice.addLiquidityETHTaxFree(
+    return await TaxOfficeV2.addLiquidityETHTaxFree(
       empAmount,
       empAmount.mul(992).div(1000),
       parseUnits(ftmAmount, 18).mul(992).div(1000),
@@ -921,8 +922,8 @@ export class EmpFinance {
   }
 
   async quoteFromSpooky(tokenAmount: string, tokenName: string): Promise<string> {
-    const {SpookyRouter} = this.contracts;
-    const {_reserve0, _reserve1} = await this.EMPETH_LP.getReserves();
+    const { SpookyRouter } = this.contracts;
+    const { _reserve0, _reserve1 } = await this.EMPETH_LP.getReserves();
     let quote;
     if (tokenName === 'EMP') {
       quote = await SpookyRouter.quote(parseUnits(tokenAmount), _reserve1, _reserve0);
@@ -936,7 +937,7 @@ export class EmpFinance {
    * @returns an array of the regulation events till the most up to date epoch
    */
   async listenForRegulationsEvents(version: number): Promise<any> {
-    const {Treasury, TreasuryV2} = this.contracts;
+    const { Treasury, TreasuryV2 } = this.contracts;
     const selectedTreasury = version === 0 ? Treasury : TreasuryV2;
 
     const treasuryDaoFundedFilter = selectedTreasury.filters.DaoFundFunded();
@@ -949,7 +950,7 @@ export class EmpFinance {
     let boardroomFundEvents = await selectedTreasury.queryFilter(treasuryBoardroomFundedFilter);
     var events: any[] = [];
     boardroomFundEvents.forEach(function callback(value, index) {
-      events.push({epoch: index + 1});
+      events.push({ epoch: index + 1 });
       events[index].boardroomFund = getDisplayBalance(value.args[1]);
       if (index === 0) {
         epochBlocksRanges.push({
@@ -1003,19 +1004,25 @@ export class EmpFinance {
    * @returns the amount of bonds events emitted based on the filter provided during a specific period
    */
   async getBondsWithFilterForPeriod(version: number, filter: EventFilter, from: number, to: number): Promise<number> {
-    const {Treasury, TreasuryV2} = this.contracts;
+    const { Treasury, TreasuryV2 } = this.contracts;
     const bondsAmount = version === 0 ? await Treasury.queryFilter(filter, from, to) : await TreasuryV2.queryFilter(filter, from, to);
     return bondsAmount.length;
   }
 
   async estimateZapIn(tokenName: string, lpName: string, amount: string): Promise<number[]> {
-    const {zapper} = this.contracts;
+    const { zapper } = this.contracts;
     const lpToken = this.externalTokens[lpName];
     let estimate;
     if (tokenName === BNB_TICKER) {
       estimate = await zapper.estimateZapIn(lpToken.address, SPOOKY_ROUTER_ADDR, parseUnits(amount, 18));
     } else {
-      const token = tokenName === EMP_TICKER ? this.EMP : this.ESHARE;
+      let token: ERC20;
+      switch (tokenName) {
+        case EMP_TICKER: token = this.EMP; break;
+        case ESHARE_TICKER: token = this.ESHARE; break;
+        case ETH_TICKER: token = this.ETH; break;
+        default: token = null;
+      }      
       estimate = await zapper.estimateZapInToken(
         token.address,
         lpToken.address,
@@ -1026,7 +1033,7 @@ export class EmpFinance {
     return [estimate[0] / 1e18, estimate[1] / 1e18];
   }
   async zapIn(tokenName: string, lpName: string, amount: string): Promise<TransactionResponse> {
-    const {zapper} = this.contracts;
+    const { zapper } = this.contracts;
     const lpToken = this.externalTokens[lpName];
     if (tokenName === BNB_TICKER) {
       let overrides = {
@@ -1034,7 +1041,13 @@ export class EmpFinance {
       };
       return await zapper.zapIn(lpToken.address, SPOOKY_ROUTER_ADDR, this.myAccount, overrides);
     } else {
-      const token = tokenName === EMP_TICKER ? this.EMP : this.ESHARE;
+      let token: ERC20;
+      switch (tokenName) {
+        case EMP_TICKER: token = this.EMP; break;
+        case ESHARE_TICKER: token = this.ESHARE; break;
+        case ETH_TICKER: token = this.ETH; break;
+        default: token = null;
+      }
       return await zapper.zapInToken(
         token.address,
         parseUnits(amount, 18),
@@ -1045,11 +1058,11 @@ export class EmpFinance {
     }
   }
   async swapEBondToEShare(bbondAmount: BigNumber): Promise<TransactionResponse> {
-    const {EShareSwapper} = this.contracts;
+    const { EShareSwapper } = this.contracts;
     return await EShareSwapper.swapEBondToEShare(bbondAmount);
   }
   async estimateAmountOfEShare(bbondAmount: string): Promise<string> {
-    const {EShareSwapper} = this.contracts;
+    const { EShareSwapper } = this.contracts;
     try {
       const estimateBN = await EShareSwapper.estimateAmountOfEShare(parseUnits(bbondAmount, 18));
       return getDisplayBalance(estimateBN, 18, 6);
@@ -1059,7 +1072,7 @@ export class EmpFinance {
   }
 
   async getEShareSwapperStat(address: string): Promise<EShareSwapperStat> {
-    const {EShareSwapper} = this.contracts;
+    const { EShareSwapper } = this.contracts;
     const bshareBalanceBN = await EShareSwapper.getEShareBalance();
     const bbondBalanceBN = await EShareSwapper.getEBondBalance(address);
     // const empPriceBN = await EShareSwapper.getEmpPrice();
