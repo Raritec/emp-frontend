@@ -33,7 +33,7 @@ const StyledButton = styled.button<StyledButtonProps>`
   align-items: center;
   border: 2px solid;
   border-radius: 28px;
-  background-color: #171923;
+  background-color: #10131e;
   box-shadow: ${(props) => ('0px 0px 5px 0px ' + !props.disabled ? 'rgba(251,221,76,1)' : 'grey' + ';')};
   color: ${(props) => (!props.disabled ? '#155aca' : 'grey')};
   cursor: pointer;
@@ -51,7 +51,7 @@ const StyledButton = styled.button<StyledButtonProps>`
 
   &:hover {
     background-color: #155aca;
-    color: #171923;
+    color: #10131e;
   }
 `;
 

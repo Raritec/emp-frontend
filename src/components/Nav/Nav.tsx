@@ -40,7 +40,7 @@ const useStyles = makeStyles((theme) => ({
   },
   appBar: {
     color: '#155aca',
-    'background-color': '#171923',
+    'background-color': '#10131e',
     // borderBottom: `1px solid ${theme.palette.divider}`,
     padding: '10px',
     marginBottom: '3rem',
@@ -139,11 +139,11 @@ const Nav = () => {
 
               {/* <Link color="textPrimary" to="/sbs" className={classes.link}>
                 SBS
-              </Link>
-              <Link color="textPrimary" to="/liquidity" className={classes.link}>
+              </Link> */}
+              <Link to="/liquidity" className={'navLink ' + classes.link}>
                 Liquidity
               </Link>
-              <Link color="textPrimary" to="/regulations" className={classes.link}>
+              {/* <Link color="textPrimary" to="/regulations" className={classes.link}>
                 Regulations
               </Link> */}
               <a href="https://yieldwolf.finance/bsc/emp-money" className={'navLink ' + classes.link} rel="noopener" target="_blank">
@@ -222,7 +222,7 @@ const Nav = () => {
                 <ListItemLink primary="BoardroomV2" to="/boardroomV2" />
                 <ListItemLink primary="Bond" to="/bond" />
                 {/* <ListItemLink primary="SBS" to="/sbs" /> */}
-                {/* <ListItemLink primary="Liquidity" to="/liquidity" /> */}
+                <ListItemLink primary="Liquidity" to="/liquidity" />
                 {/* <ListItemLink primary="Regulations" to="/regulations" /> */}
                 <ListItem button component="a" href="https://yieldwolf.finance/bsc/emp-money">
                   <ListItemText>AutoVaults</ListItemText>

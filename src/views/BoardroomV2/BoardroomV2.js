@@ -36,7 +36,7 @@ const BackgroundImage = createGlobalStyle`
   body {
     background: url(${HomeImage}) repeat !important;
     background-size: cover !important;
-    background-color: #171923;
+    background-color: #10131e;
   }
 `;
 
@@ -109,7 +109,7 @@ const BoardroomV2 = () => {
                   <Card className={classes.gridItem}>
                     <CardContent align="center">
                       <Typography style={{ textTransform: 'uppercase', color: '#155aca' }}>APR</Typography>
-                      <Typography>{boardroomAPR > 1 ? boardroomAPR.toFixed(2) : 'TBD'}%</Typography>
+                      <Typography>{boardroomAPR.toFixed(2)}%</Typography>
                     </CardContent>
                   </Card>
                 </Grid>

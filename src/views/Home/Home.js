@@ -31,7 +31,7 @@ const BackgroundImage = createGlobalStyle`
   body {
     background: url(${HomeImage}) repeat !important;
     background-size: cover !important;
-    background-color: #171923;
+    background-color: #10131e;
   }
 `;
 
@@ -76,7 +76,7 @@ const Home = () => {
     () => (empStats ? Number(empStats.priceInDollars).toFixed(2) : null),
     [empStats],
   );
-  const empPriceInBNB = useMemo(() => (empStats ? Number(empStats.tokenInFtm).toFixed(4) : null), [empStats]);
+  const empPriceInBNB = useMemo(() => (empStats ? Number(empStats.tokenInETH).toFixed(4) : null), [empStats]);
   const empCirculatingSupply = useMemo(() => (empStats ? String(empStats.circulatingSupply) : null), [empStats]);
   const empTotalSupply = useMemo(() => (empStats ? String(empStats.totalSupply) : null), [empStats]);
 
@@ -85,7 +85,7 @@ const Home = () => {
     [eShareStats],
   );
   const eSharePriceInBNB = useMemo(
-    () => (eShareStats ? Number(eShareStats.tokenInFtm).toFixed(4) : null),
+    () => (eShareStats ? Number(eShareStats.tokenInETH).toFixed(4) : null),
     [eShareStats],
   );
   const eShareCirculatingSupply = useMemo(
@@ -98,7 +98,7 @@ const Home = () => {
     () => (tBondStats ? Number(tBondStats.priceInDollars).toFixed(2) : null),
     [tBondStats],
   );
-  const tBondPriceInBNB = useMemo(() => (tBondStats ? Number(tBondStats.tokenInFtm).toFixed(4) : null), [tBondStats]);
+  const tBondPriceInBNB = useMemo(() => (tBondStats ? Number(tBondStats.tokenInETH).toFixed(4) : null), [tBondStats]);
   const tBondCirculatingSupply = useMemo(
     () => (tBondStats ? String(tBondStats.circulatingSupply) : null),
     [tBondStats],
@@ -367,7 +367,7 @@ const Home = () => {
               </Box>
               <h2>EMP-ETH PancakeSwap LP</h2>
               <Box mt={2}>
-                <Button onClick={onPresentEmpZap} className="shinyButtonSecondary">
+                <Button disabled onClick={onPresentEmpZap} className="shinyButtonDisabledSecondary">
                   Zap In
                 </Button>
               </Box>

@@ -26,7 +26,7 @@ const BackgroundImage = createGlobalStyle`
   body {
     background: url(${HomeImage}) repeat !important;
     background-size: cover !important;
-    background-color: #171923;
+    background-color: #10131e;
   }
 `;
 
@@ -63,7 +63,7 @@ const Bond: React.FC = () => {
     [empFinance, addTransaction, version],
   );
   const isBondRedeemable = useMemo(() => cashPrice.gt(BOND_REDEEM_PRICE_BN), [cashPrice]);
-  const isBondPurchasable = useMemo(() => Number(bondStat?.tokenInFtm) < 1.01, [bondStat]);
+  const isBondPurchasable = useMemo(() => Number(bondStat?.tokenInETH) < 1.01, [bondStat]);
   const now = Date.now();
 
   return (
@@ -97,13 +97,13 @@ const Bond: React.FC = () => {
                 <ExchangeStat
                   tokenName="4,000 EMP"
                   description="Last-Hour TWAP Price"
-                  price={Number(empStat?.tokenInFtm).toFixed(4) || '-'}
+                  price={Number(empStat?.tokenInETH).toFixed(4) || '-'}
                 />
                 <Spacer size="md" />
                 <ExchangeStat
                   tokenName="4,000 EBOND"
                   description="Current Price: (EMP)^2"
-                  price={Number(bondStat?.tokenInFtm).toFixed(4) || '-'}
+                  price={Number(bondStat?.tokenInETH).toFixed(4) || '-'}
                 />
               </StyledStatsWrapper>
               <StyledCardWrapper>

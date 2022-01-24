@@ -117,8 +117,7 @@ export class EmpFinance {
     //console.log('priceOfEmpInDollars', priceOfEmpInDollars);
 
     return {
-      //  tokenInFtm: (Number(priceInBNB) * 100).toString(),
-      tokenInFtm: priceInETH ? priceInETH.toString() : '0',
+      tokenInETH: priceInETH ? priceInETH.toString() : '0',
       priceInDollars: priceOfEmpInDollars,
       totalSupply: getDisplayBalance(supply, this.EMP.decimal, 0),
       circulatingSupply: getDisplayBalance(empCirculatingSupply, this.EMP.decimal, 0),
@@ -200,11 +199,11 @@ export class EmpFinance {
     const empStat = await this.getEmpStat();
     const bondEmpRatioBN = version === 0 ? await Treasury.getBondPremiumRate() : await TreasuryV2.getBondPremiumRate();
     const modifier = bondEmpRatioBN / 1e18 > 1 ? bondEmpRatioBN / 1e18 : 1;
-    const bondPriceInBNB = (Number(empStat.tokenInFtm) * modifier).toFixed(2);
+    const bondPriceInETH = (Number(empStat.tokenInETH) * modifier).toFixed(2);
     const priceOfEBondInDollars = (Number(empStat.priceInDollars) * modifier).toFixed(2);
     const supply = await this.EBOND.displayedTotalSupply();
     return {
-      tokenInFtm: bondPriceInBNB,
+      tokenInETH: bondPriceInETH,
       priceInDollars: priceOfEBondInDollars,
       totalSupply: supply,
       circulatingSupply: supply,
@@ -230,7 +229,7 @@ export class EmpFinance {
     const priceOfSharesInDollars = (Number(priceInBNB) * Number(priceOfOneBNB)).toFixed(2);
 
     return {
-      tokenInFtm: priceInBNB,
+      tokenInETH: priceInBNB,
       priceInDollars: priceOfSharesInDollars,
       totalSupply: getDisplayBalance(supply, this.ESHARE.decimal, 0),
       circulatingSupply: getDisplayBalance(tShareCirculatingSupply, this.ESHARE.decimal, 0),
@@ -245,7 +244,7 @@ export class EmpFinance {
     const empRewardPoolSupply = await this.EMP.balanceOf(EmpRewardPool.address);
     const empCirculatingSupply = supply.sub(empRewardPoolSupply);
     return {
-      tokenInFtm: getDisplayBalance(expectedPrice),
+      tokenInETH: getDisplayBalance(expectedPrice),
       priceInDollars: getDisplayBalance(expectedPrice),
       totalSupply: getDisplayBalance(supply, this.EMP.decimal, 0),
       circulatingSupply: getDisplayBalance(empCirculatingSupply, this.EMP.decimal, 0),
@@ -430,16 +429,16 @@ export class EmpFinance {
       totalValue += poolValue;
     }
 
-    const [shareStat, boardroomtShareBalanceOf, boardroomV2tShareBalanceOf] = await Promise.all([
+    const [shareStat, boardroomV2tShareBalanceOf] = await Promise.all([
       this.getShareStat(),
-      this.ESHARE.balanceOf(this.currentBoardroom(0).address),
+      // this.ESHARE.balanceOf(this.currentBoardroom(0).address),
       this.ESHARE.balanceOf(this.currentBoardroom(1).address)
     ]);
     const ESHAREPrice = shareStat.priceInDollars;
-    const boardroomTVL = Number(getDisplayBalance(boardroomtShareBalanceOf, this.ESHARE.decimal)) * Number(ESHAREPrice);
+    // const boardroomTVL = Number(getDisplayBalance(boardroomtShareBalanceOf, this.ESHARE.decimal)) * Number(ESHAREPrice);
     const boardroomV2TVL = Number(getDisplayBalance(boardroomV2tShareBalanceOf, this.ESHARE.decimal)) * Number(ESHAREPrice);
 
-    return totalValue + boardroomTVL + boardroomV2TVL;
+    return totalValue + boardroomV2TVL;
   }
 
   /**
@@ -908,16 +907,18 @@ export class EmpFinance {
     return true;
   }
 
-  async provideEmpFtmLP(ftmAmount: string, empAmount: BigNumber): Promise<TransactionResponse> {
+  async provideEmpEthLP(ethAmount: BigNumber, empAmount: BigNumber): Promise<TransactionResponse> {
     const { TaxOfficeV2 } = this.contracts;
-    let overrides = {
-      value: parseUnits(ftmAmount, 18),
-    };
-    return await TaxOfficeV2.addLiquidityETHTaxFree(
+    // let overrides = {
+    //   value: parseUnits(ftmAmount, 18),
+    // };
+    return await TaxOfficeV2.addLiquidityTaxFree(
+      this.ETH.address,
       empAmount,
-      empAmount.mul(992).div(1000),
-      parseUnits(ftmAmount, 18).mul(992).div(1000),
-      overrides,
+      ethAmount,
+      empAmount.mul(980).div(1000),
+      ethAmount.mul(980).div(1000),
+      // overrides,
     );
   }
 
@@ -925,12 +926,13 @@ export class EmpFinance {
     const { SpookyRouter } = this.contracts;
     const { _reserve0, _reserve1 } = await this.EMPETH_LP.getReserves();
     let quote;
+    console.log(tokenName)
     if (tokenName === 'EMP') {
       quote = await SpookyRouter.quote(parseUnits(tokenAmount), _reserve1, _reserve0);
     } else {
       quote = await SpookyRouter.quote(parseUnits(tokenAmount), _reserve0, _reserve1);
     }
-    return (quote / 1e14).toString();
+    return (quote / 1e18).toString();
   }
 
   /**

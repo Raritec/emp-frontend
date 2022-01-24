@@ -92,7 +92,7 @@ const ZapModal: React.FC<ZapProps> = ({ onConfirm, onDismiss, tokenName = '', de
       <Select onChange={handleChangeAsset} style={{ color: '#2c2560' }} labelId="label" id="select" value={zappingToken}>
         <StyledMenuItem value={BNB_TICKER}>BNB</StyledMenuItem>
         <StyledMenuItem value={ESHARE_TICKER}>ESHARE</StyledMenuItem>
-        <StyledMenuItem value={ETH_TICKER}>ETH</StyledMenuItem>
+        {/* {tokenName.startsWith(ESHARE_TICKER) && <StyledMenuItem value={ETH_TICKER}>ETH</StyledMenuItem>} */}
         {/* Emp as an input for zapping will be disabled due to issues occuring with the Gatekeeper system */}
         {/* <StyledMenuItem value={EMP_TICKER}>EMP</StyledMenuItem> */}
       </Select>

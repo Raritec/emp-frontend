@@ -106,7 +106,7 @@ code {
 
 .shinyButton:hover {
   background-color: #155aca !important;
-  color: #171923 !important;
+  color: #10131e !important;
 }
 
 .shinyButtonSecondary {
@@ -117,7 +117,7 @@ code {
   font-size: 1rem !important;
   padding-left: 5px;
   background-color: #155aca !important;
-  color: #171923 !important;
+  color: #10131e !important;
   /* box-shadow: 0px 0px 5px 0px rgba(26, 107, 158, 1); */
 }
 
@@ -130,7 +130,7 @@ code {
 
 .shinyButtonSecondary:hover {
   background-color: #155aca !important;
-  color: #171923 !important;
+  color: #10131e !important;
   box-shadow: 0px 0px 5px 0px rgba(26, 107, 158, 1);
 }
 

@@ -42,5 +42,5 @@ export const teal = {
 };
 
 export const newNavy = {
-  200: '171923',
+  200: '10131e',
 };

@@ -12,14 +12,14 @@ import useTokenBalance from '../../hooks/useTokenBalance';
 import {getDisplayBalance} from '../../utils/formatBalance';
 import useApproveTaxOffice from '../../hooks/useApproveTaxOffice';
 import {ApprovalState} from '../../hooks/useApprove';
-import useProvideEmpFtmLP from '../../hooks/useProvideEmpFtmLP';
+import useProvideEmpEthLP from '../../hooks/useProvideEmpFtmLP';
 import {Alert} from '@material-ui/lab';
 
 const BackgroundImage = createGlobalStyle`
   body {
     background: url(${HomeImage}) no-repeat !important;
     background-size: cover !important;
-    background-color: #171923;
+    background-color: #10131e;
   }
 `;
 function isNumeric(n) {
@@ -31,19 +31,19 @@ const ProvideLiquidity = () => {
   const [ftmAmount, setFtmAmount] = useState(0);
   const [lpTokensAmount, setLpTokensAmount] = useState(0);
   const {balance} = useWallet();
-  const empStats = useEmpStats();
+  // const empStats = useEmpStats();
   const empFinance = useEmpFinance();
-  const [approveTaxOfficeStatus, approveTaxOffice] = useApproveTaxOffice();
+  const [approveTaxOfficeStatus0, approveTaxOfficeStatus1, approveTaxOffice] = useApproveTaxOffice();
   const empBalance = useTokenBalance(empFinance.EMP);
   const btcBalance = useTokenBalance(empFinance.ETH);
 
   const ftmBalance = (btcBalance / 1e18).toFixed(4);
-  const {onProvideEmpFtmLP} = useProvideEmpFtmLP();
+  const {onProvideEmpEthLP} = useProvideEmpEthLP();
   const empFtmLpStats = useLpStats('EMP-ETH-LP');
 
   const empLPStats = useMemo(() => (empFtmLpStats ? empFtmLpStats : null), [empFtmLpStats]);
-  const empPriceInBNB = useMemo(() => (empStats ? Number(empStats.tokenInFtm).toFixed(2) : null), [empStats]);
-  const ftmPriceInEMP = useMemo(() => (empStats ? Number(1 / empStats.tokenInFtm).toFixed(2) : null), [empStats]);
+  // const empPriceInETH = useMemo(() => (empFtmLpStats ? Number(empFtmLpStats.priceOfOne).toFixed(2) : null), [empFtmLpStats]);
+  // const ethPriceInEMP = useMemo(() => (empFtmLpStats ? Number(empFtmLpStats.ftmAmount).toFixed(2) : null), [empFtmLpStats]);
   // const classes = useStyles();
 
   const handleEmpChange = async (e) => {
@@ -75,7 +75,7 @@ const ProvideLiquidity = () => {
     setLpTokensAmount(quoteFromSpooky / empLPStats.ftmAmount);
   };
   const handleFtmSelectMax = async () => {
-    const quoteFromSpooky = await empFinance.quoteFromSpooky(ftmBalance, 'BNB');
+    const quoteFromSpooky = await empFinance.quoteFromSpooky(ftmBalance, 'ETH');
     setFtmAmount(ftmBalance);
     setEmpAmount(quoteFromSpooky);
     setLpTokensAmount(ftmBalance / empLPStats.ftmAmount);
@@ -89,7 +89,7 @@ const ProvideLiquidity = () => {
 
       <Grid container justify="center">
         <Box style={{width: '600px'}}>
-          <Alert variant="filled" severity="warning" style={{marginBottom: '10px'}}>
+          {/* <Alert variant="filled" severity="warning" style={{marginBottom: '10px'}}>
             <b>
               This and{' '}
               <a href="https://pancakeswap.finance/" rel="noopener noreferrer" target="_blank">
@@ -97,7 +97,7 @@ const ProvideLiquidity = () => {
               </a>{' '}
               are the only ways to provide Liquidity on EMP-ETH pair without paying tax.
             </b>
-          </Alert>
+          </Alert> */}
           <Grid item xs={12} sm={12}>
             <Paper>
               <Box mt={4}>
@@ -123,15 +123,15 @@ const ProvideLiquidity = () => {
                         ></TokenInput>
                       </Grid>
                       <Grid item xs={12}>
-                        <p>1 EMP = {empPriceInBNB} BNB</p>
-                        <p>1 BNB = {ftmPriceInEMP} EMP</p>
+                        {/* <p>1 EMP = {empPriceInETH} ETH</p> */}
+                        {/* <p>1 ETH = {ethPriceInEMP} EMP</p> */}
                         <p>LP tokens ≈ {lpTokensAmount.toFixed(2)}</p>
                       </Grid>
                       <Grid xs={12} justifyContent="center" style={{textAlign: 'center'}}>
-                        {approveTaxOfficeStatus === ApprovalState.APPROVED ? (
+                        {approveTaxOfficeStatus0 === ApprovalState.APPROVED && approveTaxOfficeStatus1 === ApprovalState.APPROVED ? (
                           <Button
                             variant="contained"
-                            onClick={() => onProvideEmpFtmLP(ftmAmount.toString(), empAmount.toString())}
+                            onClick={() => onProvideEmpEthLP(ftmAmount.toString(), empAmount.toString())}
                             color="primary"
                             style={{margin: '0 10px', color: '#fff'}}
                           >
