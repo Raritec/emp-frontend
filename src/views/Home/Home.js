@@ -367,7 +367,7 @@ const Home = () => {
               </Box>
               <h2>EMP-ETH PancakeSwap LP</h2>
               <Box mt={2}>
-                <Button disabled onClick={onPresentEmpZap} className="shinyButtonDisabledSecondary">
+                <Button onClick={onPresentEmpZap} className="shinyButtonSecondary">
                   Zap In
                 </Button>
               </Box>

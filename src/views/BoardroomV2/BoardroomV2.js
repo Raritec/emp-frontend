@@ -196,7 +196,7 @@ const BoardroomV2 = () => {
             </Box>
             <Box mt={5}>
               <Grid container justify="center" spacing={3}>
-                <Alert variant="standard" severity="info" style={{ width: "20rem" }}>
+                <Alert variant="outlined" severity="info" style={{ width: "20rem" }}>
                   Please remove funds from <a href="/boardroom">BoardroomV1</a>
                 </Alert>
               </Grid>

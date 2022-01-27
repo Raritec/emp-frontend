@@ -86,15 +86,15 @@ const ZapModal: React.FC<ZapProps> = ({ onConfirm, onDismiss, tokenName = '', de
       <ModalTitle text={`Zap in ${tokenName}`} />
 
       <StyledActionSpacer />
-      <InputLabel style={{ color: '#2c2560' }} id="label">
-        Select asset to zap with
+      <InputLabel style={{ color: '#155aca' }} id="label">
+        Select Token:
       </InputLabel>
-      <Select onChange={handleChangeAsset} style={{ color: '#2c2560' }} labelId="label" id="select" value={zappingToken}>
+      <br/>
+      <Select onChange={handleChangeAsset} style={{ color: 'white' }} labelId="label" id="select" value={zappingToken}>
         <StyledMenuItem value={BNB_TICKER}>BNB</StyledMenuItem>
+        <StyledMenuItem value={ETH_TICKER}>ETH</StyledMenuItem>
         <StyledMenuItem value={ESHARE_TICKER}>ESHARE</StyledMenuItem>
-        {/* {tokenName.startsWith(ESHARE_TICKER) && <StyledMenuItem value={ETH_TICKER}>ETH</StyledMenuItem>} */}
-        {/* Emp as an input for zapping will be disabled due to issues occuring with the Gatekeeper system */}
-        {/* <StyledMenuItem value={EMP_TICKER}>EMP</StyledMenuItem> */}
+        <StyledMenuItem value={EMP_TICKER}>EMP</StyledMenuItem>
       </Select>
       <TokenInput
         onSelectMax={handleSelectMax}
@@ -103,7 +103,9 @@ const ZapModal: React.FC<ZapProps> = ({ onConfirm, onDismiss, tokenName = '', de
         max={zappingTokenBalance}
         symbol={zappingToken}
       />
-      <Label text="Zap Estimations" />
+      <br/>
+      <Label variant="yellow" text="Zap Estimations:" />
+      <br/>
       <StyledDescriptionText>
         {' '}
         {tokenName}: {Number(estimate.token0) / Number(ftmAmountPerLP)}
@@ -133,7 +135,7 @@ const ZapModal: React.FC<ZapProps> = ({ onConfirm, onDismiss, tokenName = '', de
       </ModalActions>
 
       <StyledActionSpacer />
-      <Alert variant="filled" severity="info">
+      <Alert variant="outlined" severity="info">
         New feature. Use at your own risk!
       </Alert>
     </Modal>
@@ -147,7 +149,7 @@ const StyledActionSpacer = styled.div`
 
 const StyledDescriptionText = styled.div`
   align-items: center;
-  color: ${(props) => props.theme.color.grey[400]};
+  color: white;
   display: flex;
   font-size: 14px;
   font-weight: 700;
@@ -156,11 +158,11 @@ const StyledDescriptionText = styled.div`
 `;
 const StyledMenuItem = withStyles({
   root: {
-    backgroundColor: 'white',
-    color: '#2c2560',
+    backgroundColor: '#10131e',
+    color: 'white',
     '&:hover': {
-      backgroundColor: 'grey',
-      color: '#2c2560',
+      backgroundColor: 'black',
+      color: 'white',
     },
     selected: {
       backgroundColor: 'black',

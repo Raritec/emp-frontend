@@ -35,9 +35,8 @@ const ProvideLiquidity = () => {
   const empFinance = useEmpFinance();
   const [approveTaxOfficeStatus0, approveTaxOfficeStatus1, approveTaxOffice] = useApproveTaxOffice();
   const empBalance = useTokenBalance(empFinance.EMP);
-  const btcBalance = useTokenBalance(empFinance.ETH);
+  const ethBalance = useTokenBalance(empFinance.ETH);
 
-  const ftmBalance = (btcBalance / 1e18).toFixed(4);
   const {onProvideEmpEthLP} = useProvideEmpEthLP();
   const empFtmLpStats = useLpStats('EMP-ETH-LP');
 
@@ -47,6 +46,7 @@ const ProvideLiquidity = () => {
   // const classes = useStyles();
 
   const handleEmpChange = async (e) => {
+    if (!empLPStats) return;
     if (e.currentTarget.value === '' || e.currentTarget.value === 0) {
       setEmpAmount(e.currentTarget.value);
     }
@@ -58,6 +58,7 @@ const ProvideLiquidity = () => {
   };
 
   const handleFtmChange = async (e) => {
+    if (!empLPStats) return;
     if (e.currentTarget.value === '' || e.currentTarget.value === 0) {
       setFtmAmount(e.currentTarget.value);
     }
@@ -69,16 +70,18 @@ const ProvideLiquidity = () => {
     setLpTokensAmount(quoteFromSpooky / empLPStats.tokenAmount);
   };
   const handleEmpSelectMax = async () => {
+    if (!empLPStats) return;
     const quoteFromSpooky = await empFinance.quoteFromSpooky(getDisplayBalance(empBalance), 'EMP');
     setEmpAmount(getDisplayBalance(empBalance));
     setFtmAmount(quoteFromSpooky);
     setLpTokensAmount(quoteFromSpooky / empLPStats.ftmAmount);
   };
   const handleFtmSelectMax = async () => {
-    const quoteFromSpooky = await empFinance.quoteFromSpooky(ftmBalance, 'ETH');
-    setFtmAmount(ftmBalance);
+    if (!empLPStats) return;
+    const quoteFromSpooky = await empFinance.quoteFromSpooky(getDisplayBalance(ethBalance), 'ETH');
+    setFtmAmount(getDisplayBalance(ethBalance));
     setEmpAmount(quoteFromSpooky);
-    setLpTokensAmount(ftmBalance / empLPStats.ftmAmount);
+    setLpTokensAmount(quoteFromSpooky / empLPStats.tokenAmount);
   };
   return (
     <Page>
@@ -118,7 +121,7 @@ const ProvideLiquidity = () => {
                           onSelectMax={handleFtmSelectMax}
                           onChange={handleFtmChange}
                           value={ftmAmount}
-                          max={ftmBalance}
+                          max={getDisplayBalance(ethBalance)}
                           symbol={'ETH'}
                         ></TokenInput>
                       </Grid>

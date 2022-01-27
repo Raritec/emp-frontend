@@ -3,7 +3,7 @@ import { ESHARE_TICKER, ETH_TICKER } from './../utils/constants';
 //import { Fetcher as FetcherSpirit, Token as TokenSpirit } from '@spiritswap/sdk';
 import { Fetcher, Route, Token } from '@pancakeswap/sdk';
 import { Configuration } from './config';
-import { ContractName, TokenStat, AllocationTime, LPStat, Bank, PoolStats, EShareSwapperStat } from './types';
+import { ContractName, TokenStat, AllocationTime, LPStat, Bank, PoolStats, EShareSwapperStat, Call } from './types';
 import { BigNumber, Contract, ethers, EventFilter } from 'ethers';
 import { decimalToBalance } from './ether-utils';
 import { TransactionResponse } from '@ethersproject/providers';
@@ -13,7 +13,7 @@ import { getDefaultProvider } from '../utils/provider';
 import IUniswapV2PairABI from './IUniswapV2Pair.abi.json';
 import config, { bankDefinitions } from '../config';
 import moment from 'moment';
-import { parseUnits } from 'ethers/lib/utils';
+import { Interface, parseUnits } from 'ethers/lib/utils';
 import { BNB_TICKER, SPOOKY_ROUTER_ADDR, EMP_TICKER } from '../utils/constants';
 /**
  * An API module of Emp Money contracts.
@@ -360,9 +360,8 @@ export class EmpFinance {
    */
   async getDepositTokenPriceInDollars(tokenName: string, token: ERC20) {
     let tokenPrice;
-    const priceOfOneFtmInDollars = await this.getWBNBPriceFromPancakeswap();
     if (tokenName === 'WBNB') {
-      tokenPrice = priceOfOneFtmInDollars;
+      tokenPrice = await this.getWBNBPriceFromPancakeswap();
     } else {
       if (tokenName === 'EMP-ETH-LP') {
         tokenPrice = await this.getLPTokenPrice(token, this.EMP, true);
@@ -373,8 +372,11 @@ export class EmpFinance {
       } else if (tokenName === 'EMP-ETH-APELP') {
         tokenPrice = await this.getApeLPTokenPrice(token, this.EMP, true);
       } else {
-        tokenPrice = await this.getTokenPriceFromPancakeswap(token);
-        tokenPrice = (Number(tokenPrice) * Number(priceOfOneFtmInDollars)).toString();
+        const [priceToken, priceBNB] = await Promise.all([
+          this.getTokenPriceFromPancakeswap(token),
+          this.getWBNBPriceFromPancakeswap()
+        ]);
+        tokenPrice = (Number(priceToken) * Number(priceBNB)).toString();
       }
     }
     return tokenPrice;
@@ -431,11 +433,9 @@ export class EmpFinance {
 
     const [shareStat, boardroomV2tShareBalanceOf] = await Promise.all([
       this.getShareStat(),
-      // this.ESHARE.balanceOf(this.currentBoardroom(0).address),
       this.ESHARE.balanceOf(this.currentBoardroom(1).address)
     ]);
     const ESHAREPrice = shareStat.priceInDollars;
-    // const boardroomTVL = Number(getDisplayBalance(boardroomtShareBalanceOf, this.ESHARE.decimal)) * Number(ESHAREPrice);
     const boardroomV2TVL = Number(getDisplayBalance(boardroomV2tShareBalanceOf, this.ESHARE.decimal)) * Number(ESHAREPrice);
 
     return totalValue + boardroomV2TVL;
@@ -926,7 +926,6 @@ export class EmpFinance {
     const { SpookyRouter } = this.contracts;
     const { _reserve0, _reserve1 } = await this.EMPETH_LP.getReserves();
     let quote;
-    console.log(tokenName)
     if (tokenName === 'EMP') {
       quote = await SpookyRouter.quote(parseUnits(tokenAmount), _reserve1, _reserve0);
     } else {
@@ -1012,11 +1011,11 @@ export class EmpFinance {
   }
 
   async estimateZapIn(tokenName: string, lpName: string, amount: string): Promise<number[]> {
-    const { zapper } = this.contracts;
+    const { Zapper } = this.contracts;
     const lpToken = this.externalTokens[lpName];
     let estimate;
     if (tokenName === BNB_TICKER) {
-      estimate = await zapper.estimateZapIn(lpToken.address, SPOOKY_ROUTER_ADDR, parseUnits(amount, 18));
+      estimate = await Zapper.estimateZapIn(lpToken.address, SPOOKY_ROUTER_ADDR, parseUnits(amount, 18));
     } else {
       let token: ERC20;
       switch (tokenName) {
@@ -1025,7 +1024,7 @@ export class EmpFinance {
         case ETH_TICKER: token = this.ETH; break;
         default: token = null;
       }      
-      estimate = await zapper.estimateZapInToken(
+      estimate = await Zapper.estimateZapInToken(
         token.address,
         lpToken.address,
         SPOOKY_ROUTER_ADDR,
@@ -1035,13 +1034,13 @@ export class EmpFinance {
     return [estimate[0] / 1e18, estimate[1] / 1e18];
   }
   async zapIn(tokenName: string, lpName: string, amount: string): Promise<TransactionResponse> {
-    const { zapper } = this.contracts;
+    const { ZapperV2 } = this.contracts;
     const lpToken = this.externalTokens[lpName];
     if (tokenName === BNB_TICKER) {
       let overrides = {
         value: parseUnits(amount, 18),
       };
-      return await zapper.zapIn(lpToken.address, SPOOKY_ROUTER_ADDR, this.myAccount, overrides);
+      return await ZapperV2.zapBNBToLP(lpToken.address, overrides);
     } else {
       let token: ERC20;
       switch (tokenName) {
@@ -1050,12 +1049,10 @@ export class EmpFinance {
         case ETH_TICKER: token = this.ETH; break;
         default: token = null;
       }
-      return await zapper.zapInToken(
+      return await ZapperV2.zapTokenToLP(
         token.address,
         parseUnits(amount, 18),
-        lpToken.address,
-        SPOOKY_ROUTER_ADDR,
-        this.myAccount,
+        lpToken.address
       );
     }
   }
@@ -1089,5 +1086,20 @@ export class EmpFinance {
       // bsharePrice: bsharePriceBN.toString(),
       rateESharePerEmp: rateESharePerEmpBN.toString(),
     };
+  }
+
+  async multicall(abi: any[], calls: Call[]) {
+    try {
+      const { MultiCall } = this.contracts;
+      const itf = new Interface(abi);
+  
+      const calldata = calls.map((call) => [call.address.toLowerCase(), itf.encodeFunctionData(call.name, call.params)])
+      const { returnData } = await MultiCall.aggregate(calldata);
+      const res = returnData.map((call: any, i: number) => itf.decodeFunctionResult(calls[i].name, call))
+      return res
+    } catch (e) {
+      console.error(e);
+    }
+    return null
   }
 }

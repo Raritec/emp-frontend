@@ -65,7 +65,7 @@ const Footer = () => {
             <a href="https://t.me/empmoney" rel="noopener noreferrer" target="_blank" className={classes.link}>
               <IconTelegram style={{fill: '#dddfee', height: '20px'}} />
             </a>
-            <a href="http://discord.emp.money/" rel="noopener noreferrer" target="_blank" className={classes.link}>
+            <a href="https://discord.gg/6QuNJ65vSc" rel="noopener noreferrer" target="_blank" className={classes.link}>
               <IconDiscord style={{fill: '#dddfee', height: '20px'}} />
             </a>
           </Grid>

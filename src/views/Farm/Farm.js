@@ -71,7 +71,7 @@ const Farm = () => {
                   {/* <Typography color="textPrimary" align="center" variant="h4" gutterBottom style={{marginTop: '20px'}}>
                   Earn EMP by staking PancakeSwap LP
                   </Typography> */}
-                  <Alert variant="standard" severity="warning" style={{marginTop: '30px'}}>
+                  <Alert variant="standard" severity="info" style={{marginTop: '30px'}}>
                     Please remove funds from the inactive farms below.
                   </Alert>
                   <Grid container spacing={3} style={{marginTop: '20px', display: 'flex', alignItems: 'center'}}>

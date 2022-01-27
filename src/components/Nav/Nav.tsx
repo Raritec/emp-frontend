@@ -131,7 +131,7 @@ const Nav = () => {
                 Farm
               </Link>
               <Link to="/boardroomV2" className={'navLink ' + classes.link}>
-                BoardroomV2
+                Boardroom
               </Link>
               <Link to="/bond" className={'navLink ' + classes.link}>
                 Bond
@@ -219,7 +219,7 @@ const Nav = () => {
                 </ListItem>
                 <ListItemLink primary="Home" to="/" />
                 <ListItemLink primary="Farm" to="/farm" />
-                <ListItemLink primary="BoardroomV2" to="/boardroomV2" />
+                <ListItemLink primary="Boardroom" to="/boardroomV2" />
                 <ListItemLink primary="Bond" to="/bond" />
                 {/* <ListItemLink primary="SBS" to="/sbs" /> */}
                 <ListItemLink primary="Liquidity" to="/liquidity" />
