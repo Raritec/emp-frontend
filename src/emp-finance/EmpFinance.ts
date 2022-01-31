@@ -29,6 +29,8 @@ export class EmpFinance {
   boardroomVersionOfUser?: string;
 
   EMPETH_LP: Contract;
+  // EMPETH: ERC20;
+  // ESHAREBNB: ERC20;
   EMP: ERC20;
   ESHARE: ERC20;
   EBOND: ERC20;
@@ -51,6 +53,8 @@ export class EmpFinance {
     this.EMP = new ERC20(deployments.Emp.address, provider, 'EMP');
     this.ESHARE = new ERC20(deployments.EShare.address, provider, 'ESHARE');
     this.EBOND = new ERC20(deployments.EBond.address, provider, 'EBOND');
+    // this.EMPETH = new ERC20(externalTokens['EMP-ETH-LP'][0], provider, 'EMP-ETH-LP');
+    // this.ESHAREBNB = new ERC20(externalTokens['ESHARE-BNB-LP'][0], provider, 'ESHARE-BNB-LP');
     this.BNB = this.externalTokens['WBNB'];
     this.ETH = this.externalTokens['ETH'];
 
@@ -495,7 +499,7 @@ export class EmpFinance {
         return await pool.pendingShare(poolId, account);
       }
     } catch (err) {
-      console.error(`Failed to call pendingShare() on pool ${pool.address}: ${err.stack}`);
+      console.error(`Failed to call pendingShare() on pool ${pool.address}: ${err}`);
       return BigNumber.from(0);
     }
   }
@@ -506,7 +510,7 @@ export class EmpFinance {
       let userInfo = await pool.userInfo(poolId, account);
       return await userInfo.amount;
     } catch (err) {
-      console.error(`Failed to call userInfo() on pool ${pool.address}: ${err.stack}`);
+      console.error(`Failed to call userInfo() on pool ${pool.address}: ${err}`);
       return BigNumber.from(0);
     }
   }
@@ -1056,6 +1060,12 @@ export class EmpFinance {
       );
     }
   }
+
+  async zapStrategy(amount: string | BigNumber, percentEmpLP: string | number | BigNumber): Promise<TransactionResponse> {
+    const { Strategy } = this.contracts;
+    return await Strategy.zapStrategy(amount, percentEmpLP);
+  }
+
   async swapEBondToEShare(bbondAmount: BigNumber): Promise<TransactionResponse> {
     const { EShareSwapper } = this.contracts;
     return await EShareSwapper.swapEBondToEShare(bbondAmount);

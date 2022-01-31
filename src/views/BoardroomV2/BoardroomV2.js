@@ -1,6 +1,5 @@
 import React, { useMemo } from 'react';
 import { useWallet } from 'use-wallet';
-import { Link } from 'react-router-dom';
 import moment from 'moment';
 import styled from 'styled-components';
 import Spacer from '../../components/Spacer';
@@ -10,8 +9,6 @@ import { makeStyles } from '@material-ui/core/styles';
 import config from '../../config';
 
 import { Box, Card, CardContent, Button, Typography, Grid } from '@material-ui/core';
-
-import { Alert } from '@material-ui/lab';
 
 import UnlockWallet from '../../components/UnlockWallet';
 import Page from '../../components/Page';
@@ -179,6 +176,21 @@ const BoardroomV2 = () => {
           </Grid> */}
             </Box>
 
+            {/* <Box mt={5}>
+              <Grid container justify="center" spacing={3} mt={10}>
+                <Button
+                  disabled={!canClaimReward || earnings.lt(1e18)}
+                  onClick={onCompound}
+                  className={
+                     !canClaimReward || earnings.lt(1e18)
+                      ? 'shinyButtonDisabledSecondary'
+                      : 'shinyButtonSecondary'
+                  }
+                >
+                  Compound
+                </Button>
+              </Grid>
+            </Box> */}
             <Box mt={5}>
               <Grid container justify="center" spacing={3} mt={10}>
                 <Button
@@ -194,13 +206,13 @@ const BoardroomV2 = () => {
                 </Button>
               </Grid>
             </Box>
-            <Box mt={5}>
+            {/* <Box mt={5}>
               <Grid container justify="center" spacing={3}>
                 <Alert variant="outlined" severity="info" style={{ width: "20rem" }}>
                   Please remove funds from <a href="/boardroom">BoardroomV1</a>
                 </Alert>
               </Grid>
-            </Box>
+            </Box> */}
           </>
       ) : (
         <UnlockWallet />

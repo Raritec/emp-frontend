@@ -9,7 +9,7 @@ const useCashPriceInLastTWAP = (version: number) => {
 
   const fetchCashPrice = useCallback(async () => {
     setPrice(await empFinance.getEmpPriceInLastTWAP(version));
-  }, [empFinance]);
+  }, [empFinance, version]);
 
   useEffect(() => {
     fetchCashPrice().catch((err) => console.error(`Failed to fetch EMP price: ${err.stack}`));

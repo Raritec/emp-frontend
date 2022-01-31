@@ -1,8 +1,6 @@
-import {useCallback, useEffect, useState} from 'react';
+import {useEffect, useState} from 'react';
 import {BigNumber} from 'ethers';
-import ERC20 from '../emp-finance/ERC20';
 import useEmpFinance from './useEmpFinance';
-import config from '../config';
 
 const useBondsPurchasable = (version: number) => {
   const [balance, setBalance] = useState(BigNumber.from(0));

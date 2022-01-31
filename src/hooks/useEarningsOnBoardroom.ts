@@ -20,7 +20,7 @@ const useEarningsOnBoardroom = (version: number) => {
     if (isUnlocked) {
       fetchBalance();
     }
-  }, [isUnlocked, empFinance, slowRefresh]);
+  }, [isUnlocked, empFinance, slowRefresh, version]);
 
   return balance;
 };

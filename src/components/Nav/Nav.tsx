@@ -1,4 +1,4 @@
-import React, { useMemo, useEffect } from 'react';
+import React, { useMemo } from 'react';
 import clsx from 'clsx';
 import { Link } from 'react-router-dom';
 import {
@@ -28,7 +28,7 @@ import AccountButton from './AccountButton';
 
 import empLogo from '../../assets/img/emp-logo-final.gif';
 import { roundAndFormatNumber } from '../../0x';
-import TokenSymbol from '../TokenSymbol';
+import useBnbStats from '../../hooks/useBnbStats';
 
 const useStyles = makeStyles((theme) => ({
   '@global': {
@@ -90,9 +90,8 @@ const Nav = () => {
   const [open, setOpen] = React.useState(false);
   const empStats = useEmpStats();
   const btcStats = useEthStats();
+  const bnbStats = useBnbStats();
   const shareStats = useShareStats();
-
-  const [connected, setConnected] = React.useState(false);
 
   const handleDrawerOpen = () => {
     setOpen(true);
@@ -103,6 +102,7 @@ const Nav = () => {
   };
 
   const btcPriceInDollars = useMemo(() => (btcStats ? Number(btcStats).toFixed(2) : null), [btcStats]);
+  const bnbPriceInDollars = useMemo(() => (bnbStats ? Number(bnbStats).toFixed(2) : null), [bnbStats]);
   const empPriceInDollars = useMemo(
     () => (empStats ? Number(empStats.priceInDollars).toFixed(2) : null),
     [empStats],
@@ -117,13 +117,13 @@ const Nav = () => {
       <Toolbar className={classes.toolbar}>
         {matches ? (
           <>
-            <Typography variant="h6" color="inherit" noWrap style={{ flexGrow: '0', marginBottom: '-5px' }} className={classes.toolbarTitle}>
+            <Typography variant="h6" color="inherit" noWrap style={{ flexGrow: '0', marginBottom: '-10px' }} className={classes.toolbarTitle}>
               {/* <a className={ classes.brandLink } href="/">Emp Money</a> */}
               <Link to="/" color="inherit" className={classes.brandLink}>
                 <img alt="emp.money" src={empLogo} height="80px" />
               </Link>
             </Typography>
-            <Box style={{ paddingLeft: '15px', paddingTop: '10px', fontSize: '1rem', flexGrow: '1' }}>
+            <Box style={{ paddingLeft: '0', paddingTop: '0', fontSize: '1rem', flexGrow: '1' }}>
               <Link to="/" className={'navLink ' + classes.link}>
                 Home
               </Link>
@@ -157,10 +157,10 @@ const Nav = () => {
             <Box
               style={{
                 flexGrow: '0',
-                paddingLeft: '15px',
-                paddingTop: '5px',
+                paddingLeft: '0px',
+                paddingTop: '0px',
                 fontSize: '1rem',
-                paddingRight: '15px',
+                paddingRight: '0px',
                 height: '30px',
                 display: 'flex',
               }}
@@ -171,6 +171,8 @@ const Nav = () => {
               <div className="navTokenPrice">${roundAndFormatNumber(Number(sharePriceInDollars), 2)}</div>
               <div className="navTokenIcon btc"></div>{' '}
               <div className="navTokenPrice">${roundAndFormatNumber(Number(btcPriceInDollars), 2)}</div>
+              <div className="navTokenIcon bnb"></div>{' '}
+              <div className="navTokenPrice">${roundAndFormatNumber(Number(bnbPriceInDollars), 2)}</div>
             </Box>
             <AccountButton text="Connect" />
           </>

@@ -9,7 +9,6 @@ import CardIcon from '../../../components/CardIcon';
 import {AddIcon, RemoveIcon} from '../../../components/icons';
 import FlashOnIcon from '@material-ui/icons/FlashOn';
 import IconButton from '../../../components/IconButton';
-import Label from '../../../components/Label';
 import Value from '../../../components/Value';
 import {ThemeContext} from 'styled-components';
 

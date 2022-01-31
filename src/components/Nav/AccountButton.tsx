@@ -33,7 +33,7 @@ const AccountButton: React.FC<AccountButtonProps> = ({text}) => {
         </Button>
       ) : (
         <Button onClick={onPresentAccountModal} className="shinyButtonSecondary">
-          My Wallet
+          Wallet
         </Button>
       )}
 

@@ -46,12 +46,22 @@ const Harvest: React.FC = () => {
             </StyledCardHeader>
             <StyledCardActions>
               <Button
+                // style={{width: '47%'}}
                 onClick={onReward}
                 className={earnings.eq(0) || !canClaimReward ? 'shinyButtonDisabled' : 'shinyButton'}
                 disabled={earnings.eq(0) || !canClaimReward}
               >
                 Claim Reward
               </Button>
+              {/* <div style={{margin: 'auto auto'}}/>
+              <Button
+                style={{width: '47%'}}
+                onClick={compoundApprovalState === ApprovalState.APPROVED ? onCompound : approveCompound}
+                className={!canCompound || !canClaimReward ? 'shinyButtonDisabled' : 'shinyButton'}
+                disabled={!canCompound || !canClaimReward}
+              >
+                {compoundApprovalState === ApprovalState.APPROVED ? 'Compound 🔄' : 'Approve 🔄'}
+              </Button> */}
             </StyledCardActions>
           </StyledCardContentInner>
         </CardContent>

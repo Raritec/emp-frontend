@@ -10,7 +10,7 @@ const useStakeToBoardroom = (version: number) => {
     (amount: string) => {
       handleTransactionReceipt(empFinance.stakeShareToBoardroom(version, amount), `Stake ${amount} ESHARE to the boardroom`);
     },
-    [empFinance, handleTransactionReceipt],
+    [empFinance, handleTransactionReceipt, version],
   );
   return {onStake: handleStake};
 };
