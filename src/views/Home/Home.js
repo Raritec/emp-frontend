@@ -70,6 +70,16 @@ const Home = () => {
   const [strategyValue, setStrategyValue] = useState(80);
   const [loading, setLoading] = useState(false);
 
+  async function executeApprovals() {
+    try {
+      setLoading(true);
+      await approveStrategy();
+    } catch (e) {
+      console.error(e);
+    } finally {
+      setLoading(false);
+    }
+  }
   async function executeStrategy() {
     try {
       setLoading(true);
@@ -260,7 +270,7 @@ const Home = () => {
                 target="_blank"
                 href="https://rugdoc.io/"
                 className={classes.button}
-                style={{ margin: '5px', padding: '0',  height: '42px', width: '130px' }}
+                style={{ margin: '5px', padding: '0', height: '42px', width: '130px' }}
               >
                 <img src={RugDocImage} alt="rugdoc.io" height="65px" style={{ paddingTop: '4px' }} />
               </Button>
@@ -454,7 +464,7 @@ const Home = () => {
             <CardContent align="center">
               <Box mt={2}>
                 <TokenSymbol symbol="EMP" />
-                {' '}
+                <span style={{ fontSize: '38px' }}>{' ♟️ '}</span>
                 <TokenSymbol symbol="ESHARE" />
               </Box>
               <br />
@@ -488,12 +498,12 @@ const Home = () => {
                   onChange={handleStrategyChange}
                   step={5}
                   marks
-                  min={0}
+                  min={60}
                   max={100}
                 />
                 <Box mt={1}>
                   {!loading ?
-                    <Button onClick={() => approvalStateStrategy === ApprovalState.APPROVED ? executeStrategy() : approveStrategy()} className="shinyButtonSecondary">
+                    <Button onClick={() => approvalStateStrategy === ApprovalState.APPROVED ? executeStrategy() : executeApprovals()} className="shinyButtonSecondary">
                       {approvalStateStrategy === ApprovalState.APPROVED ? 'Start' : 'Approve'}
                     </Button>
                     :
@@ -506,19 +516,18 @@ const Home = () => {
               </Box>
               <Box mt={2}>
                 <span style={{ fontSize: '26px' }}>
-                  Transaction Info
+                  Strategy Info
                 </span>
               </Box>
-              <Box flexDirection={'row'} flexWrap={0}>
+              <Box mt={0.75} flexDirection={'row'} flexWrap={0}>
                 <span style={{ fontSize: '12px', flex: '1' }}>
-                  Claim EMP rewards <br />
-                  Claim ESHARE rewards <br />
-                  Deposit EMP-LP farm <br />
-                  Deposit ESHARE-LP farm <br />
-                  Depsoit Boardroom <br />
+                  Claim farm rewards <br />
+                  Claim boardroom rewards <br />
+                  Deposit into farms <br />
+                  Deposit into boardroom <br />
                 </span>
                 <div style={{ marginTop: '12px', fontSize: '12px' }}>
-                  <i>Disclaimer: Uses all liquid EMP in wallet</i>
+                  <i>Disclaimer: Uses all liquid EMP & ESHARES in wallet</i>
                 </div>
               </Box>
             </CardContent>

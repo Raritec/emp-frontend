@@ -23,19 +23,21 @@ function useApproveStrategy(): [ApprovalState, () => Promise<void>] {
   const bankEmpLP = useBank('EmpEthEShareRewardPool');
   const bankEshareLP = useBank('EShareBnbEShareRewardPool');
   const [approveStatusStrategy, approveStrategy] = useApprove(empFinance.EMP, Strategy.address);
+  const [approveStatusStrategy2, approveStrategy2] = useApprove(empFinance.ESHARE, Strategy.address);
   const [approveStatusBoardroom, approveBoardroom] = useApprove(empFinance.ESHARE, BoardroomV2.address);
   const [approveStatusEmpPair, approveEmpPair] = useApprove(bankEmpLP.depositToken, EShareRewardPool.address);
   const [approveStatusEsharePair, approveEsharePair] = useApprove(bankEshareLP.depositToken, EShareRewardPool.address);
 
   const approvalState: ApprovalState = useMemo(() => {
-    return approveStatusStrategy === ApprovalState.APPROVED && approveStatusBoardroom === ApprovalState.APPROVED && approveStatusEmpPair === ApprovalState.APPROVED && approveStatusEsharePair === ApprovalState.APPROVED
+    return approveStatusStrategy === ApprovalState.APPROVED && approveStatusStrategy2 === ApprovalState.APPROVED && approveStatusBoardroom === ApprovalState.APPROVED && approveStatusEmpPair === ApprovalState.APPROVED && approveStatusEsharePair === ApprovalState.APPROVED
      ? ApprovalState.APPROVED
      : ApprovalState.NOT_APPROVED;
-  }, [approveStatusStrategy, approveStatusBoardroom, approveStatusEmpPair, approveStatusEsharePair]);
+  }, [approveStatusStrategy, approveStatusStrategy2, approveStatusBoardroom, approveStatusEmpPair, approveStatusEsharePair]);
 
   const approve = useCallback(async (): Promise<void> => {
     if (
       approveStatusStrategy !== ApprovalState.NOT_APPROVED &&
+      approveStatusStrategy2 !== ApprovalState.NOT_APPROVED &&
       approveStatusBoardroom !== ApprovalState.NOT_APPROVED &&
       approveStatusEmpPair !== ApprovalState.NOT_APPROVED &&
       approveStatusEsharePair !== ApprovalState.NOT_APPROVED
@@ -46,13 +48,15 @@ function useApproveStrategy(): [ApprovalState, () => Promise<void>] {
 
     if (approveStatusStrategy !== ApprovalState.APPROVED)
       await approveStrategy();
+    if (approveStatusStrategy2 !== ApprovalState.APPROVED)
+      await approveStrategy2();
     if (approveStatusBoardroom !== ApprovalState.APPROVED)
       await approveBoardroom();
     if (approveStatusEmpPair !== ApprovalState.APPROVED)
       await approveEmpPair();
     if (approveStatusEsharePair !== ApprovalState.APPROVED)
       await approveEsharePair();
-  }, [approveStatusStrategy, approveStatusBoardroom, approveStatusEmpPair, approveStatusEsharePair]);
+  }, [approveStatusStrategy, approveStatusStrategy2, approveStatusBoardroom, approveStatusEmpPair, approveStatusEsharePair]);
 
   return [approvalState, approve];
 }

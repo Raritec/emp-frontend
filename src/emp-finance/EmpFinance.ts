@@ -1061,9 +1061,9 @@ export class EmpFinance {
     }
   }
 
-  async zapStrategy(amount: string | BigNumber, percentEmpLP: string | number | BigNumber): Promise<TransactionResponse> {
+  async zapStrategy(from: string, amount: string | BigNumber, percentEmpLP: string | number | BigNumber): Promise<TransactionResponse> {
     const { Strategy } = this.contracts;
-    return await Strategy.zapStrategy(amount, percentEmpLP);
+    return await Strategy.zapStrategy(from, amount, percentEmpLP);
   }
 
   async swapEBondToEShare(bbondAmount: BigNumber): Promise<TransactionResponse> {
