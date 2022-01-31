@@ -70,8 +70,7 @@ const Bond: React.FC = () => {
     <Switch>
       <Page>
         <BackgroundImage />
-        {now < config.bondLaunchesAt.getTime() ? <LaunchCountdown deadline={config.bondLaunchesAt} description='Home' descriptionLink='/' />
-        : !!account ? (
+        {!!account ? (
           <>
             <Route exact path={path}>
               <PageHeader icon={'🏦'} title="Buy &amp; Redeem Bonds" subtitle="Earn premiums upon redemption" />

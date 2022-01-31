@@ -1027,7 +1027,7 @@ export class EmpFinance {
         case ESHARE_TICKER: token = this.ESHARE; break;
         case ETH_TICKER: token = this.ETH; break;
         default: token = null;
-      }      
+      }
       estimate = await Zapper.estimateZapInToken(
         token.address,
         lpToken.address,
@@ -1045,6 +1045,7 @@ export class EmpFinance {
         value: parseUnits(amount, 18),
       };
       return await ZapperV2.zapBNBToLP(lpToken.address, overrides);
+
     } else {
       let token: ERC20;
       switch (tokenName) {
@@ -1053,6 +1054,7 @@ export class EmpFinance {
         case ETH_TICKER: token = this.ETH; break;
         default: token = null;
       }
+
       return await ZapperV2.zapTokenToLP(
         token.address,
         parseUnits(amount, 18),
@@ -1061,9 +1063,12 @@ export class EmpFinance {
     }
   }
 
-  async zapStrategy(from: string, amount: string | BigNumber, percentEmpLP: string | number | BigNumber): Promise<TransactionResponse> {
+  async zapStrategy(from: string, amount: string | BigNumber, percentEmpLP: string | number | BigNumber, gasLimit?: BigNumber): Promise<TransactionResponse> {
     const { Strategy } = this.contracts;
-    return await Strategy.zapStrategy(from, amount, percentEmpLP);
+    if (gasLimit)
+      return await Strategy.zapStrategy(from, amount, percentEmpLP, { gasLimit: gasLimit.toNumber() });
+    else
+      return await Strategy.zapStrategy(from, amount, percentEmpLP);
   }
 
   async swapEBondToEShare(bbondAmount: BigNumber): Promise<TransactionResponse> {
@@ -1102,7 +1107,7 @@ export class EmpFinance {
     try {
       const { MultiCall } = this.contracts;
       const itf = new Interface(abi);
-  
+
       const calldata = calls.map((call) => [call.address.toLowerCase(), itf.encodeFunctionData(call.name, call.params)])
       const { returnData } = await MultiCall.aggregate(calldata);
       const res = returnData.map((call: any, i: number) => itf.decodeFunctionResult(calls[i].name, call))

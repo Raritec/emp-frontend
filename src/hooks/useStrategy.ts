@@ -18,22 +18,28 @@ const useStrategy = (percentEmpLP: number = 80) => {
       harvestTxs.push(await empFinance.harvest('EmpEthEShareRewardPool', 1));
 
     await Promise.all(harvestTxs.map((tx) => tx.wait()));
+    let shareBoardroomAmount = BigNumber.from('0');
 
-    const [empBalance, shareBalance] = await Promise.all([
-      empFinance.EMP.balanceOf(empFinance.myAccount),
-      empFinance.ESHARE.balanceOf(empFinance.myAccount)
-    ]);
-    const shareCompoundAmount = shareBalance.mul(80).div(100);
-    const shareBoardroomAmount = shareBalance.sub(shareCompoundAmount);
+    for (let retries = 0; retries < 3; retries++) {
+      const [empBalance, shareBalance] = await Promise.all([
+        empFinance.EMP.balanceOf(empFinance.myAccount),
+        empFinance.ESHARE.balanceOf(empFinance.myAccount)
+      ]);
+      const shareCompoundAmount = shareBalance.mul(80).div(100);
+      shareBoardroomAmount = shareBalance.sub(shareCompoundAmount);
 
-    const zapTxs = [];
+      const zapTxs = [];
 
-    if (empBalance.gt(BigNumber.from('2000000000000000000')))
-      zapTxs.push(await empFinance.zapStrategy(empFinance.EMP.address, empBalance, percentEmpLP));
-    if (shareCompoundAmount.gt(BigNumber.from('500000000000000')))
-      zapTxs.push(await empFinance.zapStrategy(empFinance.ESHARE.address, shareCompoundAmount, percentEmpLP));
+      if (empBalance.gt(BigNumber.from('2000000000000000000')))
+        zapTxs.push(await empFinance.zapStrategy(empFinance.EMP.address, empBalance, percentEmpLP, retries > 0 ? BigNumber.from('1500000').mul(retries) : null));
+      if (shareCompoundAmount.gt(BigNumber.from('500000000000000')))
+        zapTxs.push(await empFinance.zapStrategy(empFinance.ESHARE.address, shareCompoundAmount, percentEmpLP, retries > 0 ? BigNumber.from('1500000').mul(retries) : null));
 
-    await Promise.all(zapTxs.map(async (tx) => tx.wait()));
+      try {
+        await Promise.all(zapTxs.map((tx) => tx.wait()));
+        break;
+      } catch (e) { console.error(e); }
+    }
 
     const [balanceEMPLP, balanceSHARELP] = await Promise.all([
       empFinance.externalTokens['EMP-ETH-LP'].balanceOf(empFinance.myAccount),
@@ -49,7 +55,7 @@ const useStrategy = (percentEmpLP: number = 80) => {
     if (shareBoardroomAmount.gt(0))
       stakeTxs.push(await empFinance.currentBoardroom(1).stake(shareBoardroomAmount));
 
-    await Promise.all(stakeTxs.map(async (tx) => tx.wait()));
+    await Promise.all(stakeTxs.map((tx) => tx.wait()));
 
   }, [empFinance, percentEmpLP]);
   return { onStrategy: handleStrategy };
